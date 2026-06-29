@@ -65,7 +65,7 @@ export default function SignalCard({ signal }: SignalCardProps) {
       </div>
 
       {/* Row 2: Confidence bar */}
-      <div className="mb-2.5">
+      <div className="mb-2">
         <div className="flex justify-between items-center mb-1">
           <span className="text-pumple-muted text-[11px]">Confidence</span>
           <span className="text-xs font-bold" style={{ color: rarityColor }}>{signal.confidence}%</span>
@@ -90,27 +90,27 @@ export default function SignalCard({ signal }: SignalCardProps) {
       </div>
 
       {/* Row 3: Entry / TP / SL */}
-      <div className="grid grid-cols-3 gap-1.5 mb-2.5">
-        <div className="bg-pumple-elevated rounded-md p-1.5 text-center">
+      <div className="grid grid-cols-3 gap-1.5 mb-2">
+        <div className="bg-pumple-elevated rounded-md p-2 text-center">
           <p className="text-pumple-muted text-[9px] mb-0.5">Entry</p>
           <p className="font-mono text-[11px] font-bold text-pumple-blue">{signal.entry}</p>
         </div>
-        <div className="bg-pumple-elevated rounded-md p-1.5 text-center">
+        <div className="bg-pumple-elevated rounded-md p-2 text-center">
           <p className="text-pumple-muted text-[9px] mb-0.5">Take Profit</p>
           <p className="font-mono text-[11px] font-bold text-pumple-primary">{signal.tp}</p>
         </div>
-        <div className="bg-pumple-elevated rounded-md p-1.5 text-center">
+        <div className="bg-pumple-elevated rounded-md p-2 text-center">
           <p className="text-pumple-muted text-[9px] mb-0.5">Stop Loss</p>
           <p className="font-mono text-[11px] font-bold text-pumple-red">{signal.sl}</p>
         </div>
       </div>
 
       {/* Row 4: Tags */}
-      <div className="flex flex-wrap gap-1 mb-2.5">
+      <div className="flex flex-wrap gap-1 mb-2">
         {signal.tags.map(tag => (
           <span
             key={tag}
-            className="text-[10px] text-pumple-muted bg-pumple-elevated border border-pumple-border px-1.5 py-0.5 rounded-full"
+            className="text-[10px] text-pumple-muted bg-pumple-elevated border border-pumple-border px-1.5 py-0 rounded-full"
           >
             #{tag}
           </span>
@@ -118,7 +118,7 @@ export default function SignalCard({ signal }: SignalCardProps) {
       </div>
 
       {/* Row 5: Footer */}
-      <div className="flex justify-between items-center pt-2 border-t border-pumple-border">
+      <div className="flex justify-between items-center mt-2 pt-2 border-t border-pumple-border">
         <div className="flex items-center gap-1.5">
           <TierBadge tier={signal.tier} />
           <span className="text-[11px] font-semibold text-pumple-text">@{signal.user}</span>
