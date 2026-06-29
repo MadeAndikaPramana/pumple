@@ -7,12 +7,12 @@ import {
   CrosshairMode,
   CandlestickSeries,
   LineStyle,
+  type IChartApi,
   type ISeriesPrimitive,
   type IPrimitivePaneRenderer,
   type IPrimitivePaneView,
   type ISeriesApi,
   type SeriesType,
-  type SeriesAttachedParameter,
   type Time,
 } from 'lightweight-charts'
 import type { CanvasRenderingTarget2D } from 'fancy-canvas'
@@ -34,11 +34,13 @@ const TF_SECONDS: Record<string, number> = {
 // ─── Zone Primitive ────────────────────────────────────────────────────────
 
 interface ZoneParams {
+  chart: IChartApi
   series: ISeriesApi<SeriesType, Time>
   entry: number
   tp: number
   sl: number
   direction: 'LONG' | 'SHORT'
+  lastCandleTime: number
 }
 
 class ZoneRenderer implements IPrimitivePaneRenderer {
@@ -47,7 +49,7 @@ class ZoneRenderer implements IPrimitivePaneRenderer {
   draw(target: CanvasRenderingTarget2D): void {
     target.useBitmapCoordinateSpace(scope => {
       const { context: ctx, bitmapSize, horizontalPixelRatio, verticalPixelRatio } = scope
-      const { series, entry, tp, sl, direction } = this.params
+      const { chart, series, entry, tp, sl, direction, lastCandleTime } = this.params
 
       const entryY = series.priceToCoordinate(entry)
       const tpY    = series.priceToCoordinate(tp)
@@ -55,21 +57,25 @@ class ZoneRenderer implements IPrimitivePaneRenderer {
 
       if (entryY === null || tpY === null || slY === null) return
 
+      const lastX = chart.timeScale().timeToCoordinate(lastCandleTime as Time)
+      if (lastX === null) return
+      const startX = lastX * horizontalPixelRatio
+
       const w  = bitmapSize.width
       const vr = verticalPixelRatio
       const hr = horizontalPixelRatio
 
-      // TP zone (green)
+      // TP zone (green) — from last candle rightward
       const tpTop    = Math.min(entryY, tpY) * vr
       const tpBottom = Math.max(entryY, tpY) * vr
       ctx.fillStyle = 'rgba(74, 222, 128, 0.08)'
-      ctx.fillRect(0, tpTop, w, tpBottom - tpTop)
+      ctx.fillRect(startX, tpTop, w - startX, tpBottom - tpTop)
 
-      // SL zone (red)
+      // SL zone (red) — from last candle rightward
       const slTop    = Math.min(entryY, slY) * vr
       const slBottom = Math.max(entryY, slY) * vr
       ctx.fillStyle = 'rgba(244, 63, 94, 0.08)'
-      ctx.fillRect(0, slTop, w, slBottom - slTop)
+      ctx.fillRect(startX, slTop, w - startX, slBottom - slTop)
 
       // Percentage labels
       const tpPct = direction === 'LONG'
@@ -86,11 +92,11 @@ class ZoneRenderer implements IPrimitivePaneRenderer {
 
       const tpMidY = (tpTop + tpBottom) / 2
       ctx.fillStyle = 'rgba(74, 222, 128, 0.9)'
-      ctx.fillText(`+${tpPct}%`, 8 * hr, tpMidY + fontSize * 0.35)
+      ctx.fillText(`+${tpPct}%`, startX + 8 * hr, tpMidY + fontSize * 0.35)
 
       const slMidY = (slTop + slBottom) / 2
       ctx.fillStyle = 'rgba(244, 63, 94, 0.9)'
-      ctx.fillText(`-${slPct}%`, 8 * hr, slMidY + fontSize * 0.35)
+      ctx.fillText(`-${slPct}%`, startX + 8 * hr, slMidY + fontSize * 0.35)
     })
   }
 }
@@ -102,36 +108,14 @@ class ZonePrimitivePaneView implements IPrimitivePaneView {
 }
 
 class ZonePrimitive implements ISeriesPrimitive<Time> {
-  private _series: ISeriesApi<SeriesType, Time> | null = null
-  private _view: ZonePrimitivePaneView | null = null
+  private readonly _view: ZonePrimitivePaneView
 
-  constructor(
-    private readonly _entry: number,
-    private readonly _tp: number,
-    private readonly _sl: number,
-    private readonly _direction: 'LONG' | 'SHORT',
-  ) {}
-
-  attached(param: SeriesAttachedParameter<Time>): void {
-    this._series = param.series as ISeriesApi<SeriesType, Time>
-    this._view = new ZonePrimitivePaneView(
-      new ZoneRenderer({
-        series: this._series,
-        entry: this._entry,
-        tp: this._tp,
-        sl: this._sl,
-        direction: this._direction,
-      })
-    )
-  }
-
-  detached(): void {
-    this._series = null
-    this._view   = null
+  constructor(params: ZoneParams) {
+    this._view = new ZonePrimitivePaneView(new ZoneRenderer(params))
   }
 
   paneViews(): readonly IPrimitivePaneView[] {
-    return this._view ? [this._view] : []
+    return [this._view]
   }
 }
 
@@ -223,7 +207,16 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe }: MiniC
     series.createPriceLine({ price: tp,    color: '#4ADE80', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'TP'    })
     series.createPriceLine({ price: sl,    color: '#F43F5E', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'SL'    })
 
-    series.attachPrimitive(new ZonePrimitive(entry, tp, sl, direction))
+    const lastCandle = candles[candles.length - 1]
+    series.attachPrimitive(new ZonePrimitive({
+      chart,
+      series,
+      entry,
+      tp,
+      sl,
+      direction,
+      lastCandleTime: lastCandle.time as unknown as number,
+    }))
 
     chart.timeScale().fitContent()
 
