@@ -7,7 +7,15 @@ import {
   CrosshairMode,
   CandlestickSeries,
   LineStyle,
+  type ISeriesPrimitive,
+  type IPrimitivePaneRenderer,
+  type IPrimitivePaneView,
+  type ISeriesApi,
+  type SeriesType,
+  type SeriesAttachedParameter,
+  type Time,
 } from 'lightweight-charts'
+import type { CanvasRenderingTarget2D } from 'fancy-canvas'
 
 interface MiniChartProps {
   entry: number
@@ -23,25 +31,136 @@ const TF_SECONDS: Record<string, number> = {
   '1D': 86400,
 }
 
-export default function MiniChart({ entry, tp, sl, timeframe }: MiniChartProps) {
+// ─── Zone Primitive ────────────────────────────────────────────────────────
+
+interface ZoneParams {
+  series: ISeriesApi<SeriesType, Time>
+  entry: number
+  tp: number
+  sl: number
+  direction: 'LONG' | 'SHORT'
+}
+
+class ZoneRenderer implements IPrimitivePaneRenderer {
+  constructor(private readonly params: ZoneParams) {}
+
+  draw(target: CanvasRenderingTarget2D): void {
+    target.useBitmapCoordinateSpace(scope => {
+      const { context: ctx, bitmapSize, horizontalPixelRatio, verticalPixelRatio } = scope
+      const { series, entry, tp, sl, direction } = this.params
+
+      const entryY = series.priceToCoordinate(entry)
+      const tpY    = series.priceToCoordinate(tp)
+      const slY    = series.priceToCoordinate(sl)
+
+      if (entryY === null || tpY === null || slY === null) return
+
+      const w  = bitmapSize.width
+      const vr = verticalPixelRatio
+      const hr = horizontalPixelRatio
+
+      // TP zone (green)
+      const tpTop    = Math.min(entryY, tpY) * vr
+      const tpBottom = Math.max(entryY, tpY) * vr
+      ctx.fillStyle = 'rgba(74, 222, 128, 0.08)'
+      ctx.fillRect(0, tpTop, w, tpBottom - tpTop)
+
+      // SL zone (red)
+      const slTop    = Math.min(entryY, slY) * vr
+      const slBottom = Math.max(entryY, slY) * vr
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.08)'
+      ctx.fillRect(0, slTop, w, slBottom - slTop)
+
+      // Percentage labels
+      const tpPct = direction === 'LONG'
+        ? ((tp - entry) / entry * 100).toFixed(2)
+        : ((entry - tp) / entry * 100).toFixed(2)
+
+      const slPct = direction === 'LONG'
+        ? ((entry - sl) / entry * 100).toFixed(2)
+        : ((sl - entry) / entry * 100).toFixed(2)
+
+      const fontSize = 11 * hr
+      ctx.font      = `bold ${fontSize}px Inter, system-ui`
+      ctx.textAlign = 'left'
+
+      const tpMidY = (tpTop + tpBottom) / 2
+      ctx.fillStyle = 'rgba(74, 222, 128, 0.9)'
+      ctx.fillText(`+${tpPct}%`, 8 * hr, tpMidY + fontSize * 0.35)
+
+      const slMidY = (slTop + slBottom) / 2
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.9)'
+      ctx.fillText(`-${slPct}%`, 8 * hr, slMidY + fontSize * 0.35)
+    })
+  }
+}
+
+class ZonePrimitivePaneView implements IPrimitivePaneView {
+  constructor(private readonly _r: ZoneRenderer) {}
+  zOrder() { return 'bottom' as const }
+  renderer() { return this._r }
+}
+
+class ZonePrimitive implements ISeriesPrimitive<Time> {
+  private _series: ISeriesApi<SeriesType, Time> | null = null
+  private _view: ZonePrimitivePaneView | null = null
+
+  constructor(
+    private readonly _entry: number,
+    private readonly _tp: number,
+    private readonly _sl: number,
+    private readonly _direction: 'LONG' | 'SHORT',
+  ) {}
+
+  attached(param: SeriesAttachedParameter<Time>): void {
+    this._series = param.series as ISeriesApi<SeriesType, Time>
+    this._view = new ZonePrimitivePaneView(
+      new ZoneRenderer({
+        series: this._series,
+        entry: this._entry,
+        tp: this._tp,
+        sl: this._sl,
+        direction: this._direction,
+      })
+    )
+  }
+
+  detached(): void {
+    this._series = null
+    this._view   = null
+  }
+
+  paneViews(): readonly IPrimitivePaneView[] {
+    return this._view ? [this._view] : []
+  }
+}
+
+// ─── Component ─────────────────────────────────────────────────────────────
+
+export default function MiniChart({ entry, tp, sl, direction, timeframe }: MiniChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const rrRatio = direction === 'LONG'
+    ? ((tp - entry) / (entry - sl)).toFixed(2)
+    : ((entry - tp) / (sl - entry)).toFixed(2)
+
+  const rrNum     = parseFloat(rrRatio)
+  const rrColor   = rrNum >= 2 ? '#4ADE80' : rrNum >= 1.5 ? '#FBBF24' : '#F43F5E'
 
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
     const interval = TF_SECONDS[timeframe] ?? 3600
-    const now = Math.floor(Date.now() / 1000)
-    const NUM = 30
+    const now      = Math.floor(Date.now() / 1000)
+    const NUM      = 30
 
-    // Generate mock OHLCV candles
     let prevClose = entry * 0.985
     const candles = Array.from({ length: NUM }, (_, i) => {
-      const time = (now - (NUM - i) * interval) as unknown as import('lightweight-charts').UTCTimestamp
-      let close: number
+      const time = (now - (NUM - i) * interval) as unknown as Time
 
+      let close: number
       if (i >= NUM - 3) {
-        // Last 3 candles trend toward entry
         const progress = (i - (NUM - 3)) / 3
         close = prevClose + (entry - prevClose) * (progress * 0.5 + 0.3)
       } else {
@@ -50,62 +169,61 @@ export default function MiniChart({ entry, tp, sl, timeframe }: MiniChartProps) 
 
       const open = prevClose
       const high = Math.max(open, close) * (1 + Math.random() * 0.008)
-      const low = Math.min(open, close) * (1 - Math.random() * 0.008)
-      prevClose = close
+      const low  = Math.min(open, close) * (1 - Math.random() * 0.008)
+      prevClose  = close
       return { time, open, high, low, close }
     })
 
     const chart = createChart(container, {
-      width: container.clientWidth,
-      height: 130,
+      width:  container.clientWidth,
+      height: 180,
       layout: {
-        background: { type: ColorType.Solid, color: '#181B24' },
-        textColor: 'transparent',
+        background:  { type: ColorType.Solid, color: '#181B24' },
+        textColor:   '#64748B',
+        fontSize:    10,
       },
       grid: {
         vertLines: { color: '#1E2235' },
         horzLines: { color: '#1E2235' },
       },
-      rightPriceScale: { visible: false },
-      leftPriceScale: { visible: false },
-      timeScale: { visible: false },
-      crosshair: { mode: CrosshairMode.Hidden },
-      handleScroll: false,
-      handleScale: false,
+      handleScroll: true,
+      handleScale:  true,
+      kineticScroll: { mouse: true, touch: true },
+      crosshair: {
+        mode: CrosshairMode.Normal,
+        vertLine: { color: '#64748B40', width: 1, style: LineStyle.Dashed },
+        horzLine: { color: '#64748B40', width: 1, style: LineStyle.Dashed },
+      },
+      timeScale: {
+        visible:        true,
+        borderColor:    '#1E2235',
+        timeVisible:    false,
+        secondsVisible: false,
+      },
+      rightPriceScale: {
+        visible:     true,
+        borderColor: '#1E2235',
+        scaleMargins: { top: 0.15, bottom: 0.15 },
+        textColor:   '#64748B',
+      },
     })
 
     const series = chart.addSeries(CandlestickSeries, {
-      upColor: '#4ADE80',
-      downColor: '#F43F5E',
-      borderUpColor: '#4ADE80',
-      borderDownColor: '#F43F5E',
-      wickUpColor: '#4ADE80',
-      wickDownColor: '#F43F5E',
+      upColor:        '#4ADE80',
+      downColor:      '#F43F5E',
+      borderUpColor:  '#4ADE80',
+      borderDownColor:'#F43F5E',
+      wickUpColor:    '#4ADE80',
+      wickDownColor:  '#F43F5E',
     })
 
     series.setData(candles)
 
-    series.createPriceLine({
-      price: entry,
-      color: '#F1F5F9',
-      lineWidth: 1,
-      lineStyle: LineStyle.Dashed,
-      axisLabelVisible: false,
-    })
-    series.createPriceLine({
-      price: tp,
-      color: '#4ADE80',
-      lineWidth: 1,
-      lineStyle: LineStyle.Dashed,
-      axisLabelVisible: false,
-    })
-    series.createPriceLine({
-      price: sl,
-      color: '#F43F5E',
-      lineWidth: 1,
-      lineStyle: LineStyle.Dashed,
-      axisLabelVisible: false,
-    })
+    series.createPriceLine({ price: entry, color: '#F1F5F9', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'Entry' })
+    series.createPriceLine({ price: tp,    color: '#4ADE80', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'TP'    })
+    series.createPriceLine({ price: sl,    color: '#F43F5E', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'SL'    })
+
+    series.attachPrimitive(new ZonePrimitive(entry, tp, sl, direction))
 
     chart.timeScale().fitContent()
 
@@ -118,24 +236,22 @@ export default function MiniChart({ entry, tp, sl, timeframe }: MiniChartProps) 
       ro.disconnect()
       chart.remove()
     }
-  }, [entry, tp, sl, timeframe])
+  }, [entry, tp, sl, direction, timeframe])
 
   return (
     <div className="relative mb-2" style={{ borderRadius: '8px', overflow: 'hidden', backgroundColor: '#181B24' }}>
       <div ref={containerRef} className="w-full" />
-      {/* Price level labels */}
-      <div className="absolute top-2 right-2 flex flex-col gap-1 pointer-events-none">
-        <div className="flex items-center gap-1">
-          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#4ADE80' }} />
-          <span className="text-[9px] font-bold" style={{ color: '#4ADE80' }}>TP</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-pumple-text" />
-          <span className="text-[9px] font-bold text-pumple-text">Entry</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#F43F5E' }} />
-          <span className="text-[9px] font-bold" style={{ color: '#F43F5E' }}>SL</span>
+
+      {/* R/R overlay */}
+      <div className="absolute top-2 right-2 z-10 pointer-events-none">
+        <div
+          className="flex items-center gap-1.5 rounded-[5px] px-2 py-1"
+          style={{ backgroundColor: 'rgba(24,27,36,0.85)', border: '1px solid #1E2235' }}
+        >
+          <span className="text-[9px] text-pumple-muted font-bold uppercase tracking-wide">R/R</span>
+          <span className="text-[12px] font-black" style={{ color: rrColor }}>
+            1:{rrRatio}
+          </span>
         </div>
       </div>
     </div>
