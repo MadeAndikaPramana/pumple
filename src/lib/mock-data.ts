@@ -18,6 +18,7 @@ export const SIGNALS: Signal[] = [
     sl: '$66,400',
     likes: 284,
     calledIt: 147,
+    description: 'Clean BOS at $67,200 confirmed on 4H. Order Block holding strong with FVG almost fully filled. Expecting continuation to $71k. High probability setup with SMC + Fibonacci confluence at entry zone.',
   },
   {
     id: 2,
@@ -36,6 +37,7 @@ export const SIGNALS: Signal[] = [
     sl: '$3,340',
     likes: 96,
     calledIt: 58,
+    description: 'Bearish divergence on RSI with FVG unfilled at $3,380. Rejected previous high cleanly. Tight SL above structure. Precision SMC short play with high R/R.',
   },
   {
     id: 3,
@@ -54,6 +56,7 @@ export const SIGNALS: Signal[] = [
     sl: '$168.50',
     likes: 412,
     calledIt: 239,
+    description: 'Perfect storm — SMC confluence, whale accumulation detected on-chain, and Fibonacci 0.618 all aligning. Multi-timeframe confirmation. Strong conviction play.',
   },
 ]
 

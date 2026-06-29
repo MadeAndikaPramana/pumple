@@ -20,6 +20,10 @@ export default function SignalCard({ signal }: SignalCardProps) {
   const tpNum = parsePrice(signal.tp)
   const slNum = parsePrice(signal.sl)
 
+  const rrRatio = signal.direction === 'LONG'
+    ? ((tpNum - entryNum) / (entryNum - slNum)).toFixed(2)
+    : ((entryNum - tpNum) / (slNum - entryNum)).toFixed(2)
+
   return (
     <div
       className="bg-pumple-card rounded-[10px] p-3 relative overflow-hidden mb-3"
@@ -31,8 +35,8 @@ export default function SignalCard({ signal }: SignalCardProps) {
         style={{ backgroundColor: `${rarityColor}70` }}
       />
 
-      {/* Row 1: Direction + coin + rarity */}
-      <div className="flex justify-between items-center mb-2.5 mt-1">
+      {/* Row 1: Direction + coin + timeframe + R/R | rarity + time */}
+      <div className="flex justify-between items-center mb-2 mt-1">
         <div className="flex items-center gap-2">
           <span
             className="text-[11px] font-bold px-2 py-0.5 rounded-[4px]"
@@ -47,6 +51,9 @@ export default function SignalCard({ signal }: SignalCardProps) {
           <span className="text-[15px] font-bold text-pumple-text">{signal.coin}</span>
           <span className="text-[10px] text-pumple-muted bg-pumple-elevated px-1.5 py-0.5 rounded-full">
             {signal.timeframe}
+          </span>
+          <span className="text-[10px] font-bold text-pumple-accent bg-pumple-accent/10 border border-pumple-accent/30 px-1.5 py-0.5 rounded">
+            R/R 1:{rrRatio}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -79,43 +86,28 @@ export default function SignalCard({ signal }: SignalCardProps) {
       </div>
 
       {/* Mini chart */}
-      <MiniChart
-        entry={entryNum}
-        tp={tpNum}
-        sl={slNum}
-        direction={signal.direction}
-        timeframe={signal.timeframe}
-      />
+      <div className="min-h-[160px]">
+        <MiniChart
+          entry={entryNum}
+          tp={tpNum}
+          sl={slNum}
+          direction={signal.direction}
+          timeframe={signal.timeframe}
+          height={160}
+        />
+      </div>
 
-      {/* Row 3: Entry / TP / SL */}
-      <div className="grid grid-cols-3 gap-1.5 mb-2">
-        <div className="bg-pumple-elevated rounded-md p-2 text-center">
-          <p className="text-pumple-muted text-[9px] mb-0.5">Entry</p>
-          <p className="font-mono text-[11px] font-bold text-pumple-blue">{signal.entry}</p>
-        </div>
-        <div className="bg-pumple-elevated rounded-md p-2 text-center">
-          <p className="text-pumple-muted text-[9px] mb-0.5">Take Profit</p>
-          <p className="font-mono text-[11px] font-bold text-pumple-primary">{signal.tp}</p>
-        </div>
-        <div className="bg-pumple-elevated rounded-md p-2 text-center">
-          <p className="text-pumple-muted text-[9px] mb-0.5">Stop Loss</p>
-          <p className="font-mono text-[11px] font-bold text-pumple-red">{signal.sl}</p>
+      {/* Description + tags */}
+      <div className="mt-2">
+        <p className="text-xs text-pumple-text/80 leading-relaxed">{signal.description}</p>
+        <div className="flex gap-1.5 flex-wrap mt-1.5">
+          {signal.tags.map(tag => (
+            <span key={tag} className="text-[10px] text-pumple-primary/70 font-semibold">#{tag}</span>
+          ))}
         </div>
       </div>
 
-      {/* Row 4: Tags */}
-      <div className="flex flex-wrap gap-1 mb-2">
-        {signal.tags.map(tag => (
-          <span
-            key={tag}
-            className="text-[10px] text-pumple-muted bg-pumple-elevated border border-pumple-border px-1.5 py-0 rounded-full"
-          >
-            #{tag}
-          </span>
-        ))}
-      </div>
-
-      {/* Row 5: Footer */}
+      {/* Footer */}
       <div className="flex justify-between items-center mt-2 pt-2 border-t border-pumple-border">
         <div className="flex items-center gap-1.5">
           <TierBadge tier={signal.tier} />

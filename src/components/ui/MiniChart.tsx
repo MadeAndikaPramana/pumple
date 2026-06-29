@@ -23,6 +23,7 @@ interface MiniChartProps {
   sl: number
   direction: 'LONG' | 'SHORT'
   timeframe: string
+  height?: number
 }
 
 const TF_SECONDS: Record<string, number> = {
@@ -121,15 +122,8 @@ class ZonePrimitive implements ISeriesPrimitive<Time> {
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function MiniChart({ entry, tp, sl, direction, timeframe }: MiniChartProps) {
+export default function MiniChart({ entry, tp, sl, direction, timeframe, height = 160 }: MiniChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-
-  const rrRatio = direction === 'LONG'
-    ? ((tp - entry) / (entry - sl)).toFixed(2)
-    : ((entry - tp) / (sl - entry)).toFixed(2)
-
-  const rrNum     = parseFloat(rrRatio)
-  const rrColor   = rrNum >= 2 ? '#4ADE80' : rrNum >= 1.5 ? '#FBBF24' : '#F43F5E'
 
   useEffect(() => {
     const container = containerRef.current
@@ -160,7 +154,7 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe }: MiniC
 
     const chart = createChart(container, {
       width:  container.clientWidth,
-      height: 180,
+      height,
       layout: {
         background:  { type: ColorType.Solid, color: '#181B24' },
         textColor:   '#64748B',
@@ -185,10 +179,7 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe }: MiniC
         secondsVisible: false,
       },
       rightPriceScale: {
-        visible:     true,
-        borderColor: '#1E2235',
-        scaleMargins: { top: 0.15, bottom: 0.15 },
-        textColor:   '#64748B',
+        visible: false,
       },
     })
 
@@ -203,9 +194,9 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe }: MiniC
 
     series.setData(candles)
 
-    series.createPriceLine({ price: entry, color: '#F1F5F9', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'Entry' })
-    series.createPriceLine({ price: tp,    color: '#4ADE80', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'TP'    })
-    series.createPriceLine({ price: sl,    color: '#F43F5E', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'SL'    })
+    series.createPriceLine({ price: entry, color: '#F1F5F9', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: false, title: '' })
+    series.createPriceLine({ price: tp,    color: '#4ADE80', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: false, title: '' })
+    series.createPriceLine({ price: sl,    color: '#F43F5E', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: false, title: '' })
 
     const lastCandle = candles[candles.length - 1]
     series.attachPrimitive(new ZonePrimitive({
@@ -229,24 +220,11 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe }: MiniC
       ro.disconnect()
       chart.remove()
     }
-  }, [entry, tp, sl, direction, timeframe])
+  }, [entry, tp, sl, direction, timeframe, height])
 
   return (
     <div className="relative mb-2" style={{ borderRadius: '8px', overflow: 'hidden', backgroundColor: '#181B24' }}>
       <div ref={containerRef} className="w-full" />
-
-      {/* R/R overlay */}
-      <div className="absolute top-2 right-2 z-10 pointer-events-none">
-        <div
-          className="flex items-center gap-1.5 rounded-[5px] px-2 py-1"
-          style={{ backgroundColor: 'rgba(24,27,36,0.85)', border: '1px solid #1E2235' }}
-        >
-          <span className="text-[9px] text-pumple-muted font-bold uppercase tracking-wide">R/R</span>
-          <span className="text-[12px] font-black" style={{ color: rrColor }}>
-            1:{rrRatio}
-          </span>
-        </div>
-      </div>
     </div>
   )
 }
