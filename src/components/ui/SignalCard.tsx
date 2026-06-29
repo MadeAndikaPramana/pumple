@@ -79,13 +79,15 @@ export default function SignalCard({ signal }: SignalCardProps) {
       </div>
 
       {/* Mini chart */}
-      <MiniChart
-        entry={entryNum}
-        tp={tpNum}
-        sl={slNum}
-        direction={signal.direction}
-        timeframe={signal.timeframe}
-      />
+      <div style={{ maxWidth: '55%' }}>
+        <MiniChart
+          entry={entryNum}
+          tp={tpNum}
+          sl={slNum}
+          direction={signal.direction}
+          timeframe={signal.timeframe}
+        />
+      </div>
 
       {/* Row 3: Entry / TP / SL */}
       <div className="grid grid-cols-3 gap-1.5 mb-2.5">
