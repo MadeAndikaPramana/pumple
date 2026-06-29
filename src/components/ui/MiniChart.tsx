@@ -122,7 +122,7 @@ class ZonePrimitive implements ISeriesPrimitive<Time> {
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function MiniChart({ entry, tp, sl, direction, timeframe, height = 240 }: MiniChartProps) {
+export default function MiniChart({ entry, tp, sl, direction, timeframe, height = 320 }: MiniChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -197,9 +197,9 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
 
     series.setData(candles)
 
-    series.createPriceLine({ price: entry, color: '#F1F5F9', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'Entry' })
-    series.createPriceLine({ price: tp,    color: '#4ADE80', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'TP'    })
-    series.createPriceLine({ price: sl,    color: '#F43F5E', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'SL'    })
+    series.createPriceLine({ price: entry, color: '#F1F5F9', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: '' })
+    series.createPriceLine({ price: tp,    color: '#4ADE80', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: '' })
+    series.createPriceLine({ price: sl,    color: '#F43F5E', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: '' })
 
     const lastCandle = candles[candles.length - 1]
     series.attachPrimitive(new ZonePrimitive({
@@ -227,7 +227,7 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
 
   return (
     <div className="relative mb-2" style={{ borderRadius: '8px', overflow: 'hidden', backgroundColor: '#181B24' }}>
-      <div ref={containerRef} className="w-full" />
+      <div ref={containerRef} style={{ height: '320px', width: '100%' }} />
     </div>
   )
 }
