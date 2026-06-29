@@ -26,7 +26,7 @@ export default function SignalCard({ signal }: SignalCardProps) {
 
   return (
     <div
-      className="bg-pumple-card rounded-[10px] p-3 relative overflow-hidden mb-3"
+      className="bg-pumple-card rounded-[10px] p-3 relative overflow-hidden mb-3 flex flex-col"
       style={{ border: `1px solid ${rarityColor}30` }}
     >
       {/* Top accent stripe */}
@@ -86,14 +86,13 @@ export default function SignalCard({ signal }: SignalCardProps) {
       </div>
 
       {/* Mini chart */}
-      <div className="min-h-[160px]">
+      <div className="flex-1 min-h-0 min-h-[240px]">
         <MiniChart
           entry={entryNum}
           tp={tpNum}
           sl={slNum}
           direction={signal.direction}
           timeframe={signal.timeframe}
-          height={160}
         />
       </div>
 
