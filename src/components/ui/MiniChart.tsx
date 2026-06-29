@@ -129,7 +129,6 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
     const container = containerRef.current
     if (!container) return
 
-    const chartHeight = container.clientHeight || 320
     const interval = TF_SECONDS[timeframe] ?? 3600
     const now      = Math.floor(Date.now() / 1000)
     const NUM      = 30
@@ -155,7 +154,7 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
 
     const chart = createChart(container, {
       width:  container.clientWidth,
-      height: chartHeight,
+      height: 280,
       layout: {
         background:  { type: ColorType.Solid, color: '#181B24' },
         textColor:   '#64748B',
@@ -216,7 +215,7 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
     chart.timeScale().fitContent()
 
     const ro = new ResizeObserver(obs => {
-      if (obs[0]) chart.applyOptions({ width: obs[0].contentRect.width, height: obs[0].contentRect.height })
+      if (obs[0]) chart.applyOptions({ width: obs[0].contentRect.width })
     })
     ro.observe(container)
 
@@ -227,8 +226,8 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
   }, [entry, tp, sl, direction, timeframe, height])
 
   return (
-    <div className="relative mb-2" style={{ borderRadius: '8px', overflow: 'hidden', backgroundColor: '#181B24', height: '100%' }}>
-      <div ref={containerRef} style={{ height: '100%', minHeight: '240px', width: '100%' }} />
+    <div className="relative" style={{ borderRadius: '8px', overflow: 'hidden', backgroundColor: '#181B24' }}>
+      <div ref={containerRef} style={{ height: '280px', width: '100%' }} />
     </div>
   )
 }
