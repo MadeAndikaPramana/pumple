@@ -122,7 +122,7 @@ class ZonePrimitive implements ISeriesPrimitive<Time> {
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function MiniChart({ entry, tp, sl, direction, timeframe, height = 160 }: MiniChartProps) {
+export default function MiniChart({ entry, tp, sl, direction, timeframe, height = 240 }: MiniChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -179,7 +179,10 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
         secondsVisible: false,
       },
       rightPriceScale: {
-        visible: false,
+        visible:      true,
+        borderColor:  '#1E2235',
+        scaleMargins: { top: 0.15, bottom: 0.15 },
+        textColor:    '#64748B',
       },
     })
 
@@ -194,9 +197,9 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
 
     series.setData(candles)
 
-    series.createPriceLine({ price: entry, color: '#F1F5F9', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: false, title: '' })
-    series.createPriceLine({ price: tp,    color: '#4ADE80', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: false, title: '' })
-    series.createPriceLine({ price: sl,    color: '#F43F5E', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: false, title: '' })
+    series.createPriceLine({ price: entry, color: '#F1F5F9', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'Entry' })
+    series.createPriceLine({ price: tp,    color: '#4ADE80', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'TP'    })
+    series.createPriceLine({ price: sl,    color: '#F43F5E', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: 'SL'    })
 
     const lastCandle = candles[candles.length - 1]
     series.attachPrimitive(new ZonePrimitive({
