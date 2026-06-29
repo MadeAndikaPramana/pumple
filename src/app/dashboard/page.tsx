@@ -50,9 +50,11 @@ export default function DashboardPage() {
       </div>
 
       {/* Signal feed */}
-      {SIGNALS.map(signal => (
-        <SignalCard key={signal.id} signal={signal} />
-      ))}
+      <div className="grid grid-cols-2 gap-3">
+        {SIGNALS.map(signal => (
+          <SignalCard key={signal.id} signal={signal} />
+        ))}
+      </div>
     </motion.div>
   )
 }
