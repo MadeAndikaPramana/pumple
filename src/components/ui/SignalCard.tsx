@@ -1,14 +1,24 @@
+import dynamic from 'next/dynamic'
 import { ThumbsUp, CheckCircle } from 'lucide-react'
 import { RARITY_COLORS, type Signal } from '@/types'
 import TierBadge from './TierBadge'
+
+const MiniChart = dynamic(() => import('./MiniChart'), { ssr: false })
 
 interface SignalCardProps {
   signal: Signal
 }
 
+function parsePrice(str: string): number {
+  return parseFloat(str.replace(/[$,]/g, ''))
+}
+
 export default function SignalCard({ signal }: SignalCardProps) {
   const rarityColor = RARITY_COLORS[signal.rarity]
   const directionColor = signal.direction === 'LONG' ? '#4ADE80' : '#F43F5E'
+  const entryNum = parsePrice(signal.entry)
+  const tpNum = parsePrice(signal.tp)
+  const slNum = parsePrice(signal.sl)
 
   return (
     <div
@@ -67,6 +77,15 @@ export default function SignalCard({ signal }: SignalCardProps) {
           />
         </div>
       </div>
+
+      {/* Mini chart */}
+      <MiniChart
+        entry={entryNum}
+        tp={tpNum}
+        sl={slNum}
+        direction={signal.direction}
+        timeframe={signal.timeframe}
+      />
 
       {/* Row 3: Entry / TP / SL */}
       <div className="grid grid-cols-3 gap-1.5 mb-2.5">

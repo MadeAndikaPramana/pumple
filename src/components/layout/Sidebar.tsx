@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import {
   Zap,
   LayoutDashboard,
+  MessagesSquare,
   Radio,
   Bot,
   Trophy,
@@ -16,6 +17,7 @@ import TierBadge from '@/components/ui/TierBadge'
 
 const NAV_ITEMS = [
   { href: '/dashboard',   label: 'Hub',      icon: LayoutDashboard },
+  { href: '/feed',        label: 'Feed',     icon: MessagesSquare },
   { href: '/signals',     label: 'Signals',  icon: Radio },
   { href: '/ai',          label: 'AI Analyst', icon: Bot },
   { href: '/leaderboard', label: 'Rankings', icon: Trophy },
