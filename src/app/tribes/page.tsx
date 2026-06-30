@@ -15,12 +15,17 @@ const TIER_ICONS: Record<TierKey, React.ReactNode> = {
 }
 
 export default function TribesPage() {
+  const topTribes = [...TRIBES].sort((a, b) => parseFloat(b.accuracy) - parseFloat(a.accuracy))
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
+      className="flex gap-4"
     >
+      {/* Main column */}
+      <div className="flex-1 min-w-0">
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
         <h1 className="text-sm font-bold text-pumple-text">Tribes</h1>
@@ -121,6 +126,36 @@ export default function TribesPage() {
             </div>
           )
         })}
+      </div>
+      </div>
+
+      {/* Right sidebar — Top Tribes */}
+      <div className="w-[300px] flex-shrink-0 hidden lg:flex flex-col gap-4 sticky top-4 self-start">
+        <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4">
+          <p className="text-sm font-bold text-pumple-text mb-3">Top tribes</p>
+          {topTribes.map((tribe, i) => {
+            const tierColor = TIERS[tribe.tier].color
+            return (
+              <div
+                key={tribe.name}
+                className="flex items-center justify-between py-2"
+                style={{ borderBottom: i < topTribes.length - 1 ? '1px solid #1E2235' : 'none' }}
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-xs font-bold text-pumple-muted w-4 flex-shrink-0">{i + 1}</span>
+                  <div
+                    className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: `${tierColor}20`, border: `1px solid ${tierColor}50`, color: tierColor }}
+                  >
+                    {TIER_ICONS[tribe.tier]}
+                  </div>
+                  <span className="text-xs font-semibold text-pumple-text truncate">{tribe.name}</span>
+                </div>
+                <span className="text-xs font-bold text-pumple-primary flex-shrink-0">{tribe.accuracy}</span>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </motion.div>
   )

@@ -17,6 +17,7 @@ const POST_TYPE_STYLES: Record<string, { color: string; bg: string }> = {
 
 const TABS = ['For You', 'Following', 'Trending', 'Signals Only']
 const COIN_TAGS = ['$BTC', '$ETH', '$SOL']
+const COINS = ['All', '$BTC', '$ETH', '$SOL', '$AVAX', '$BNB']
 
 const TRENDING_COINS = [
   { coin: '$BTC',  mentions: '2.4k posts', change: '+2.4%', up: true  },
@@ -29,6 +30,7 @@ export default function FeedPage() {
   const [activeTab, setActiveTab] = useState('For You')
   const [composeText, setComposeText] = useState('')
   const [selectedCoins, setSelectedCoins] = useState<string[]>([])
+  const [selectedCoin, setSelectedCoin] = useState('All')
 
   const toggleCoin = (coin: string) =>
     setSelectedCoins(prev =>
@@ -46,7 +48,7 @@ export default function FeedPage() {
       className="flex gap-6"
     >
       {/* Left column — main feed */}
-      <div className="flex-1 max-w-[600px]">
+      <div className="flex-1 min-w-0">
 
         {/* Compose box */}
         <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4 mb-4">
@@ -100,6 +102,23 @@ export default function FeedPage() {
               }`}
             >
               {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Coin filter row */}
+        <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+          {COINS.map(coin => (
+            <button
+              key={coin}
+              onClick={() => setSelectedCoin(coin)}
+              className={`text-[11px] font-semibold px-3 py-1.5 rounded-full whitespace-nowrap cursor-pointer flex-shrink-0 transition-colors ${
+                selectedCoin === coin
+                  ? 'bg-pumple-primary text-black'
+                  : 'bg-pumple-elevated text-pumple-muted border border-pumple-border hover:text-pumple-text'
+              }`}
+            >
+              {coin}
             </button>
           ))}
         </div>

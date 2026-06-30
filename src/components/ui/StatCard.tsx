@@ -9,14 +9,14 @@ interface StatCardProps {
 
 export default function StatCard({ label, value, icon: Icon, color }: StatCardProps) {
   return (
-    <div className="bg-pumple-card border border-pumple-border rounded-[8px] p-3">
+    <div className="bg-pumple-card border border-pumple-border rounded-[8px] p-2.5">
       <div className="flex justify-between items-start">
         <div>
-          <p className="text-pumple-muted text-[11px] mb-1.5">{label}</p>
-          <p className="text-[19px] font-black" style={{ color }}>{value}</p>
+          <p className="text-pumple-muted text-[10px] mb-1">{label}</p>
+          <p className="text-[17px] font-black" style={{ color }}>{value}</p>
         </div>
         <Icon
-          size={28}
+          size={18}
           style={{ color, opacity: 0.35 }}
         />
       </div>
