@@ -1,10 +1,27 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Clock, Coins, Eye } from 'lucide-react'
+import { Plus, Clock, Coins, Eye, Swords, Target } from 'lucide-react'
 import { TIERS, type TierKey } from '@/types'
 import TierBadge from '@/components/ui/TierBadge'
+import StatCard from '@/components/ui/StatCard'
 import { BATTLES } from '@/lib/mock-data'
+
+const ARENA_STATS = [
+  { label: 'Active battles', value: '34',          icon: Swords, color: '#4ADE80' },
+  { label: 'Total staked',   value: '12,400 PUMP', icon: Coins,  color: '#FBBF24' },
+  { label: 'Your win rate',  value: '68%',         icon: Target, color: '#A78BFA' },
+  { label: 'Watching now',   value: '2,090',       icon: Eye,    color: '#38BDF8' },
+]
+
+const FILTERS = [
+  { id: 'all',    label: 'All Battles' },
+  { id: 'hot',    label: '🔥 Hot' },
+  { id: 'new',    label: '🆕 New' },
+  { id: 'ending', label: '⏰ Ending Soon' },
+  { id: 'stake',  label: '👑 High Stake' },
+]
 
 function directionColor(pred: 'LONG' | 'SHORT') {
   return pred === 'LONG' ? '#4ADE80' : '#F43F5E'
@@ -23,12 +40,27 @@ function TierAvatar({ tier }: { tier: TierKey }) {
 }
 
 export default function BattlesPage() {
+  const [filter, setFilter] = useState('all')
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
     >
+      {/* Stats row */}
+      <div className="grid grid-cols-4 gap-2 mb-3">
+        {ARENA_STATS.map(stat => (
+          <StatCard
+            key={stat.label}
+            label={stat.label}
+            value={stat.value}
+            icon={stat.icon}
+            color={stat.color}
+          />
+        ))}
+      </div>
+
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
         <h1 className="text-sm font-bold text-pumple-text">Trading Arena</h1>
@@ -36,6 +68,23 @@ export default function BattlesPage() {
           <Plus size={12} />
           Create Battle
         </button>
+      </div>
+
+      {/* Filter pills */}
+      <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+        {FILTERS.map(f => (
+          <button
+            key={f.id}
+            onClick={() => setFilter(f.id)}
+            className={`text-[11px] font-semibold px-3 py-1.5 rounded-full whitespace-nowrap cursor-pointer flex-shrink-0 transition-colors ${
+              filter === f.id
+                ? 'bg-pumple-primary text-black'
+                : 'bg-pumple-elevated text-pumple-muted border border-pumple-border hover:text-pumple-text'
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
       </div>
 
       {/* Battle grid */}

@@ -222,7 +222,7 @@ export const CALLED_IT_USERS = [
 export const AI_MESSAGES = [
   {
     role: 'assistant' as const,
-    content: `Analyzing BTC/USDT on the 4H timeframe...\n\nI've identified a strong SMC setup:\n\n• **Order Block**: $66,800–$67,200 zone acting as support\n• **BOS**: Break of structure confirmed at $67,850\n• **FVG**: Fair value gap between $67,400–$67,600\n\nMy confidence level is 87% LONG. The liquidity sweep at $66,640 has been completed and we're seeing institutional accumulation patterns.`,
+    content: `Analyzing BTC/USDT on the 4H timeframe...\n\nI've identified a strong SMC setup:\n\n- **Order Block**: $66,800–$67,200 zone acting as support\n- **BOS**: Break of structure confirmed at $67,850\n- **FVG**: Fair value gap between $67,400–$67,600\n\nMy confidence level is 87% LONG. The liquidity sweep at $66,640 has been completed and we're seeing institutional accumulation patterns.`,
   },
   {
     role: 'user' as const,
@@ -230,6 +230,6 @@ export const AI_MESSAGES = [
   },
   {
     role: 'assistant' as const,
-    content: `Key risks to monitor:\n\n• **Stop Hunt Zone**: Bears may push to $66,400 to grab liquidity before the move\n• **Macro Risk**: FOMC meeting in 18 hours could cause volatility\n• **Invalidation**: Close below $66,200 on 4H would invalidate the bullish setup\n\nRecommended: Wait for a retest of the $67,200 OB before entry for a better risk-to-reward ratio.`,
+    content: `Key risks to monitor:\n\n- **Stop Hunt Zone**: Bears may push to $66,400 to grab liquidity before the move\n- **Macro Risk**: FOMC meeting in 18 hours could cause volatility\n- **Invalidation**: Close below $66,200 on 4H would invalidate the bullish setup\n\nRecommended: Wait for a retest of the $67,200 OB before entry for a better risk-to-reward ratio.`,
   },
 ]

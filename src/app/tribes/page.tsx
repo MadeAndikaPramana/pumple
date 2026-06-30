@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Shield, Target, Coins, Crown, TrendingUp, Lock, Users } from 'lucide-react'
 import { TIERS, type TierKey } from '@/types'
@@ -14,7 +15,15 @@ const TIER_ICONS: Record<TierKey, React.ReactNode> = {
   legend:     <Crown size={18} />,
 }
 
+const FILTERS = [
+  { id: 'all',    label: 'All Tribes' },
+  { id: 'active', label: '🔥 Most Active' },
+  { id: 'new',    label: '🆕 New' },
+  { id: 'top',    label: '👑 Top Accuracy' },
+]
+
 export default function TribesPage() {
+  const [filter, setFilter] = useState('all')
   const topTribes = [...TRIBES].sort((a, b) => parseFloat(b.accuracy) - parseFloat(a.accuracy))
 
   return (
@@ -33,6 +42,23 @@ export default function TribesPage() {
           <Plus size={12} />
           Create Tribe
         </button>
+      </div>
+
+      {/* Filter pills */}
+      <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+        {FILTERS.map(f => (
+          <button
+            key={f.id}
+            onClick={() => setFilter(f.id)}
+            className={`text-[11px] font-semibold px-3 py-1.5 rounded-full whitespace-nowrap cursor-pointer flex-shrink-0 transition-colors ${
+              filter === f.id
+                ? 'bg-pumple-primary text-black'
+                : 'bg-pumple-elevated text-pumple-muted border border-pumple-border hover:text-pumple-text'
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
       </div>
 
       {/* Tribe grid */}

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Radio, Target, Swords, Flame, Bot, Shield } from 'lucide-react'
+import { Radio, Target, Swords, Flame, Bot, Shield, Crown } from 'lucide-react'
 import StatCard from '@/components/ui/StatCard'
 import SignalCard from '@/components/ui/SignalCard'
 import TierBadge from '@/components/ui/TierBadge'
@@ -34,6 +34,35 @@ export default function DashboardPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
     >
+      {/* Trending strip */}
+      <p className="text-xs font-bold text-pumple-muted mb-2">🔥 Hot right now</p>
+      <div className="flex gap-3 overflow-x-auto pb-2 mb-3">
+        <Link
+          href="/signals/1"
+          className="flex-shrink-0 min-w-[220px] bg-pumple-card border border-pumple-border rounded-[10px] p-2.5 flex items-center gap-2 cursor-pointer hover:border-pumple-primary/30 transition-colors"
+        >
+          <Radio size={14} className="text-pumple-primary flex-shrink-0" />
+          <span className="text-xs font-bold text-pumple-text">BTC/USDT</span>
+          <span className="text-[10px] text-pumple-primary ml-auto">87% confidence</span>
+        </Link>
+        <Link
+          href="/battles"
+          className="flex-shrink-0 min-w-[220px] bg-pumple-card border border-pumple-border rounded-[10px] p-2.5 flex items-center gap-2 cursor-pointer hover:border-pumple-primary/30 transition-colors"
+        >
+          <Swords size={14} className="text-pumple-accent flex-shrink-0" />
+          <span className="text-xs font-bold text-pumple-text">BTC/USDT Battle</span>
+          <span className="text-[10px] text-pumple-muted ml-auto">847 watching</span>
+        </Link>
+        <Link
+          href="/tribes"
+          className="flex-shrink-0 min-w-[220px] bg-pumple-card border border-pumple-border rounded-[10px] p-2.5 flex items-center gap-2 cursor-pointer hover:border-pumple-primary/30 transition-colors"
+        >
+          <Crown size={14} className="text-pumple-gold flex-shrink-0" />
+          <span className="text-xs font-bold text-pumple-text">Legend Circle</span>
+          <span className="text-[10px] text-pumple-primary ml-auto">88.7% accuracy</span>
+        </Link>
+      </div>
+
       {/* 1. Stats row — full width */}
       <div className="grid grid-cols-4 gap-2 mb-3">
         {STATS.map(stat => (
