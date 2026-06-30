@@ -122,7 +122,7 @@ class ZonePrimitive implements ISeriesPrimitive<Time> {
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function MiniChart({ entry, tp, sl, direction, timeframe, height = 320 }: MiniChartProps) {
+export default function MiniChart({ entry, tp, sl, direction, timeframe, height = 280 }: MiniChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -154,7 +154,7 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
 
     const chart = createChart(container, {
       width:  container.clientWidth,
-      height: 280,
+      height,
       layout: {
         background:  { type: ColorType.Solid, color: '#181B24' },
         textColor:   '#64748B',
@@ -227,7 +227,7 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
 
   return (
     <div className="relative" style={{ borderRadius: '8px', overflow: 'hidden', backgroundColor: '#181B24' }}>
-      <div ref={containerRef} style={{ height: '280px', width: '100%' }} />
+      <div ref={containerRef} style={{ height: `${height}px`, width: '100%' }} />
     </div>
   )
 }

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import { ThumbsUp, CheckCircle } from 'lucide-react'
+import Link from 'next/link'
+import { ThumbsUp, CheckCircle, ArrowRight } from 'lucide-react'
 import { RARITY_COLORS, type Signal } from '@/types'
 import TierBadge from './TierBadge'
 
@@ -63,7 +64,12 @@ export default function SignalCard({ signal }: SignalCardProps) {
           >
             {signal.direction}
           </span>
-          <span className="text-[15px] font-bold text-pumple-text">{signal.coin}</span>
+          <Link
+            href={`/signals/${signal.id}`}
+            className="text-[15px] font-bold text-pumple-text hover:underline cursor-pointer"
+          >
+            {signal.coin}
+          </Link>
           <span className="text-[10px] text-pumple-muted bg-pumple-elevated px-1.5 py-0.5 rounded-full">
             {signal.timeframe}
           </span>
@@ -159,6 +165,12 @@ export default function SignalCard({ signal }: SignalCardProps) {
             <CheckCircle size={10} />
             Called it {signal.calledIt}
           </button>
+          <Link
+            href={`/signals/${signal.id}`}
+            className="flex items-center gap-1 text-[10px] text-pumple-muted hover:text-pumple-primary transition-colors"
+          >
+            <ArrowRight size={12} />
+          </Link>
         </div>
       </div>
     </div>

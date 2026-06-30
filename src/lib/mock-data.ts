@@ -207,6 +207,18 @@ export const FEED_POSTS = [
   },
 ]
 
+export const SIGNAL_REPLIES = [
+  { id: 1, user: 'TrendRider99',   tier: 'sniper'  as TierKey, accuracy: '76.8%', timeAgo: '8m ago',  content: 'Clean setup, watching for the retest before entry.' },
+  { id: 2, user: 'BlockchainSage', tier: 'trader'  as TierKey, accuracy: '74.2%', timeAgo: '15m ago', content: 'Agree with the BOS confirmation. Volume profile also supports this.' },
+  { id: 3, user: 'AltcoinHunter',  tier: 'trader'  as TierKey, accuracy: '71.2%', timeAgo: '22m ago', content: 'Risk seems tight for the reward here, good R/R.' },
+]
+
+export const CALLED_IT_USERS = [
+  { user: 'WhaleMaster',    tier: 'whale'  as TierKey, accuracy: '82.1%' },
+  { user: 'TrendRider99',   tier: 'sniper' as TierKey, accuracy: '76.8%' },
+  { user: 'BlockchainSage', tier: 'trader' as TierKey, accuracy: '74.2%' },
+]
+
 export const AI_MESSAGES = [
   {
     role: 'assistant' as const,
