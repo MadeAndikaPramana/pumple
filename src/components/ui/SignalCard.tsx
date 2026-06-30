@@ -11,13 +11,14 @@ const MiniChart = dynamic(() => import('./MiniChart'), { ssr: false })
 
 interface SignalCardProps {
   signal: Signal
+  chartHeight?: number
 }
 
 function parsePrice(str: string): number {
   return parseFloat(str.replace(/[$,]/g, ''))
 }
 
-export default function SignalCard({ signal }: SignalCardProps) {
+export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProps) {
   const rarityColor = RARITY_COLORS[signal.rarity]
   const directionColor = signal.direction === 'LONG' ? '#4ADE80' : '#F43F5E'
   const entryNum = parsePrice(signal.entry)
@@ -107,7 +108,7 @@ export default function SignalCard({ signal }: SignalCardProps) {
       </div>
 
       {/* Chart / image carousel */}
-      <div className="my-2 relative" style={{ minHeight: '280px' }}>
+      <div className="my-2 relative" style={{ minHeight: `${chartHeight}px` }}>
         {slideIndex === 0 ? (
           <MiniChart
             entry={entryNum}
@@ -115,12 +116,13 @@ export default function SignalCard({ signal }: SignalCardProps) {
             sl={slNum}
             direction={signal.direction}
             timeframe={signal.timeframe}
+            height={chartHeight}
           />
         ) : (
           <img
             src={signal.images![slideIndex - 1]}
             className="w-full rounded-[8px] object-cover transition-opacity duration-300"
-            style={{ height: '280px' }}
+            style={{ height: `${chartHeight}px` }}
             alt=""
           />
         )}
@@ -139,10 +141,9 @@ export default function SignalCard({ signal }: SignalCardProps) {
         </div>
       )}
 
-      {/* Description + tags */}
+      {/* Tags */}
       <div className="mt-2">
-        <p className="text-xs text-pumple-text/80 leading-relaxed">{signal.description}</p>
-        <div className="flex gap-1.5 flex-wrap mt-1.5">
+        <div className="flex gap-1.5 flex-wrap">
           {signal.tags.map(tag => (
             <span key={tag} className="text-[10px] text-pumple-primary/70 font-semibold">#{tag}</span>
           ))}

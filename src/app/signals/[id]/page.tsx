@@ -111,7 +111,7 @@ export default function SignalDetailPage() {
 
         {/* 4. Description + tags */}
         <div className="my-3">
-          <p className="text-sm text-pumple-text/80 leading-relaxed">{signal.description}</p>
+          <p className="text-sm text-pumple-text leading-relaxed">{signal.description}</p>
           <div className="flex gap-2 flex-wrap mt-2">
             {signal.tags.map(tag => (
               <span key={tag} className="text-[11px] text-pumple-primary/70 font-semibold">#{tag}</span>
