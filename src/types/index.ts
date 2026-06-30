@@ -36,6 +36,7 @@ export interface Signal {
   likes: number
   calledIt: number
   description: string
+  images?: string[]
 }
 
 export interface LeaderboardEntry {

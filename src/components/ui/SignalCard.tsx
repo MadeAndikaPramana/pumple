@@ -1,3 +1,6 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { ThumbsUp, CheckCircle } from 'lucide-react'
 import { RARITY_COLORS, type Signal } from '@/types'
@@ -23,6 +26,18 @@ export default function SignalCard({ signal }: SignalCardProps) {
   const rrRatio = signal.direction === 'LONG'
     ? ((tpNum - entryNum) / (entryNum - slNum)).toFixed(2)
     : ((entryNum - tpNum) / (slNum - entryNum)).toFixed(2)
+
+  const hasImages = signal.images && signal.images.length > 0
+  const totalSlides = hasImages ? signal.images!.length + 1 : 1
+  const [slideIndex, setSlideIndex] = useState(0)
+
+  useEffect(() => {
+    if (!hasImages) return
+    const timer = setInterval(() => {
+      setSlideIndex(prev => (prev + 1) % totalSlides)
+    }, 3000)
+    return () => clearInterval(timer)
+  }, [hasImages, totalSlides])
 
   return (
     <div
@@ -85,16 +100,38 @@ export default function SignalCard({ signal }: SignalCardProps) {
         </div>
       </div>
 
-      {/* Mini chart */}
-      <div className="my-2">
-        <MiniChart
-          entry={entryNum}
-          tp={tpNum}
-          sl={slNum}
-          direction={signal.direction}
-          timeframe={signal.timeframe}
-        />
+      {/* Chart / image carousel */}
+      <div className="my-2 relative" style={{ minHeight: '280px' }}>
+        {slideIndex === 0 ? (
+          <MiniChart
+            entry={entryNum}
+            tp={tpNum}
+            sl={slNum}
+            direction={signal.direction}
+            timeframe={signal.timeframe}
+          />
+        ) : (
+          <img
+            src={signal.images![slideIndex - 1]}
+            className="w-full rounded-[8px] object-cover transition-opacity duration-300"
+            style={{ height: '280px' }}
+            alt=""
+          />
+        )}
       </div>
+
+      {/* Slide dots — only when images exist */}
+      {hasImages && (
+        <div className="flex justify-center gap-1 mt-1.5">
+          {Array.from({ length: totalSlides }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setSlideIndex(i)}
+              className={`w-1.5 h-1.5 rounded-full transition-colors ${i === slideIndex ? 'bg-pumple-primary' : 'bg-pumple-dim'}`}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Description + tags */}
       <div className="mt-2">

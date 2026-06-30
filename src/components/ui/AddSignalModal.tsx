@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { X } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { X, Upload } from 'lucide-react'
 import TierBadge from './TierBadge'
 
 interface AddSignalModalProps {
@@ -27,6 +27,8 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
   const [selectedTypes, setSelectedTypes] = useState<string[]>([])
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState('')
+  const [images, setImages] = useState<string[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Close on Escape
   useEffect(() => {
@@ -67,6 +69,18 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
 
   const appendTag = (tag: string) =>
     setTags(prev => prev.includes(tag) ? prev : prev ? `${prev} ${tag}` : tag)
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    const remaining = 4 - images.length
+    const filesToAdd = files.slice(0, remaining)
+    filesToAdd.forEach(file => {
+      const reader = new FileReader()
+      reader.onload = () => setImages(prev => [...prev, reader.result as string])
+      reader.readAsDataURL(file)
+    })
+    e.target.value = ''
+  }
 
   return (
     <div
@@ -270,6 +284,41 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Section 7: Chart attachments */}
+          <div>
+            <p className="text-[11px] text-pumple-muted mb-1">Chart attachments (optional, up to 4)</p>
+            <div className="grid grid-cols-4 gap-2">
+              {images.map((img, idx) => (
+                <div key={idx} className="relative rounded-[8px] overflow-hidden border border-pumple-border aspect-square">
+                  <img src={img} className="w-full h-full object-cover" alt="" />
+                  <button
+                    onClick={() => setImages(prev => prev.filter((_, i) => i !== idx))}
+                    className="absolute top-1 right-1 bg-black/60 rounded-full p-0.5"
+                  >
+                    <X size={10} className="text-white" />
+                  </button>
+                </div>
+              ))}
+              {images.length < 4 && (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="aspect-square bg-pumple-elevated border border-dashed border-pumple-border rounded-[8px] flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-pumple-primary/40 transition-colors"
+                >
+                  <Upload size={16} className="text-pumple-muted" />
+                  <span className="text-[9px] text-pumple-muted">Add</span>
+                </div>
+              )}
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/jpg"
+              multiple
+              className="hidden"
+              onChange={handleImageChange}
+            />
           </div>
         </div>
 
