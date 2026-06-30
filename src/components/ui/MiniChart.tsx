@@ -16,6 +16,7 @@ import {
   type Time,
 } from 'lightweight-charts'
 import type { CanvasRenderingTarget2D } from 'fancy-canvas'
+import type { Candle } from '@/lib/use-live-klines'
 
 interface MiniChartProps {
   entry: number
@@ -24,6 +25,7 @@ interface MiniChartProps {
   direction: 'LONG' | 'SHORT'
   timeframe: string
   height?: number
+  liveCandles?: Candle[]
 }
 
 const TF_SECONDS: Record<string, number> = {
@@ -122,35 +124,58 @@ class ZonePrimitive implements ISeriesPrimitive<Time> {
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function MiniChart({ entry, tp, sl, direction, timeframe, height = 280 }: MiniChartProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
+type CandleDatum = { time: Time; open: number; high: number; low: number; close: number }
 
+export default function MiniChart({ entry, tp, sl, direction, timeframe, height = 280, liveCandles }: MiniChartProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const chartRef = useRef<IChartApi | null>(null)
+  const seriesRef = useRef<ISeriesApi<SeriesType, Time> | null>(null)
+  const zoneParamsRef = useRef<ZoneParams | null>(null)
+  const didFitRef = useRef(false)
+
+  // Create the chart once per [entry, tp, sl, direction, timeframe, height].
+  // liveCandles is intentionally NOT a dependency — live updates are handled by
+  // the separate effect below so zoom/pan state survives every tick.
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
+
+    didFitRef.current = false
 
     const interval = TF_SECONDS[timeframe] ?? 3600
     const now      = Math.floor(Date.now() / 1000)
     const NUM      = 30
 
-    let prevClose = entry * 0.985
-    const candles = Array.from({ length: NUM }, (_, i) => {
-      const time = (now - (NUM - i) * interval) as unknown as Time
+    let candles: CandleDatum[]
 
-      let close: number
-      if (i >= NUM - 3) {
-        const progress = (i - (NUM - 3)) / 3
-        close = prevClose + (entry - prevClose) * (progress * 0.5 + 0.3)
-      } else {
-        close = prevClose * (1 + (Math.random() - 0.5) * 0.03)
-      }
+    if (liveCandles && liveCandles.length > 0) {
+      candles = liveCandles.map(c => ({
+        time: c.time as unknown as Time,
+        open: c.open,
+        high: c.high,
+        low:  c.low,
+        close: c.close,
+      }))
+    } else {
+      let prevClose = entry * 0.985
+      candles = Array.from({ length: NUM }, (_, i) => {
+        const time = (now - (NUM - i) * interval) as unknown as Time
 
-      const open = prevClose
-      const high = Math.max(open, close) * (1 + Math.random() * 0.008)
-      const low  = Math.min(open, close) * (1 - Math.random() * 0.008)
-      prevClose  = close
-      return { time, open, high, low, close }
-    })
+        let close: number
+        if (i >= NUM - 3) {
+          const progress = (i - (NUM - 3)) / 3
+          close = prevClose + (entry - prevClose) * (progress * 0.5 + 0.3)
+        } else {
+          close = prevClose * (1 + (Math.random() - 0.5) * 0.03)
+        }
+
+        const open = prevClose
+        const high = Math.max(open, close) * (1 + Math.random() * 0.008)
+        const low  = Math.min(open, close) * (1 - Math.random() * 0.008)
+        prevClose  = close
+        return { time, open, high, low, close }
+      })
+    }
 
     const chart = createChart(container, {
       width:  container.clientWidth,
@@ -195,6 +220,9 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
       wickDownColor:  '#F43F5E',
     })
 
+    chartRef.current  = chart
+    seriesRef.current = series
+
     series.setData(candles)
 
     series.createPriceLine({ price: entry, color: '#F1F5F9', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: '' })
@@ -202,7 +230,7 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
     series.createPriceLine({ price: sl,    color: '#F43F5E', lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true, title: '' })
 
     const lastCandle = candles[candles.length - 1]
-    series.attachPrimitive(new ZonePrimitive({
+    const zoneParams: ZoneParams = {
       chart,
       series,
       entry,
@@ -210,7 +238,9 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
       sl,
       direction,
       lastCandleTime: lastCandle.time as unknown as number,
-    }))
+    }
+    zoneParamsRef.current = zoneParams
+    series.attachPrimitive(new ZonePrimitive(zoneParams))
 
     chart.timeScale().fitContent()
 
@@ -222,8 +252,40 @@ export default function MiniChart({ entry, tp, sl, direction, timeframe, height 
     return () => {
       ro.disconnect()
       chart.remove()
+      chartRef.current  = null
+      seriesRef.current = null
+      zoneParamsRef.current = null
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry, tp, sl, direction, timeframe, height])
+
+  // Live data updates — push new candles into the existing series without
+  // recreating the chart, so zoom/pan stays put. Keep the ZonePrimitive's
+  // lastCandleTime in sync so the TP/SL zones anchor to the latest candle.
+  useEffect(() => {
+    if (!liveCandles || liveCandles.length === 0) return
+    const series = seriesRef.current
+    if (!series) return
+
+    series.setData(liveCandles.map(c => ({
+      time: c.time as unknown as Time,
+      open: c.open,
+      high: c.high,
+      low:  c.low,
+      close: c.close,
+    })))
+
+    if (zoneParamsRef.current) {
+      zoneParamsRef.current.lastCandleTime = liveCandles[liveCandles.length - 1].time
+    }
+
+    // Refit once on the first real-data load so the (different) live range is
+    // framed correctly; afterwards leave the user's zoom/pan untouched.
+    if (!didFitRef.current && chartRef.current) {
+      chartRef.current.timeScale().fitContent()
+      didFitRef.current = true
+    }
+  }, [liveCandles])
 
   return (
     <div className="relative" style={{ borderRadius: '8px', overflow: 'hidden', backgroundColor: '#181B24' }}>

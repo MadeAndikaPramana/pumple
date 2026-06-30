@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
@@ -8,8 +9,11 @@ import { ArrowLeft, Shield, Target, MessageSquare, ThumbsUp, CheckCircle, ArrowR
 import { SIGNALS, SIGNAL_REPLIES, CALLED_IT_USERS } from '@/lib/mock-data'
 import { RARITY_COLORS, TIERS } from '@/types'
 import TierBadge from '@/components/ui/TierBadge'
+import { useLiveKlines } from '@/lib/use-live-klines'
 
 const MiniChart = dynamic(() => import('@/components/ui/MiniChart'), { ssr: false })
+
+const TIMEFRAMES = ['15m', '1H', '4H', '1D', '1W']
 
 function parsePrice(str: string): number {
   return parseFloat(str.replace(/[$,]/g, ''))
@@ -18,6 +22,10 @@ function parsePrice(str: string): number {
 export default function SignalDetailPage() {
   const params = useParams()
   const signal = SIGNALS.find(s => s.id === Number(params.id))
+
+  // Hooks must run unconditionally (before any early return).
+  const [activeTf, setActiveTf] = useState(signal?.timeframe ?? '4H')
+  const { candles, isLive, error } = useLiveKlines(signal?.coin ?? '', activeTf, 60)
 
   if (!signal) {
     return (
@@ -95,17 +103,49 @@ export default function SignalDetailPage() {
           <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse flex-shrink-0" />
           <span className="font-bold text-sm text-pumple-text">Active</span>
           <span className="text-pumple-muted text-xs">· Posted {signal.timeAgo}</span>
+
+          {/* Live data indicator */}
+          {isLive ? (
+            <span className="flex items-center gap-1 ml-auto">
+              <span className="w-1.5 h-1.5 rounded-full bg-pumple-primary animate-pulse" />
+              <span className="text-[10px] font-bold text-pumple-primary tracking-wide">LIVE</span>
+            </span>
+          ) : error ? (
+            <span className="flex items-center gap-1 ml-auto">
+              <span className="w-1.5 h-1.5 rounded-full bg-gray-500" />
+              <span className="text-[10px] text-pumple-muted">Static data</span>
+            </span>
+          ) : candles.length === 0 ? (
+            <span className="ml-auto text-[10px] text-pumple-muted">Connecting...</span>
+          ) : null}
         </div>
 
         {/* 3. Hero chart */}
         <div className="mb-2">
+          {/* Timeframe toggle */}
+          <div className="flex gap-1 mb-2">
+            {TIMEFRAMES.map(tf => (
+              <button
+                key={tf}
+                onClick={() => setActiveTf(tf)}
+                className={`text-[10px] font-bold px-2 py-1 rounded-[5px] transition-colors ${
+                  activeTf === tf
+                    ? 'bg-pumple-primary text-black'
+                    : 'bg-pumple-elevated text-pumple-muted border border-pumple-border hover:text-pumple-text'
+                }`}
+              >
+                {tf}
+              </button>
+            ))}
+          </div>
           <MiniChart
             entry={entryNum}
             tp={tpNum}
             sl={slNum}
             direction={signal.direction}
-            timeframe={signal.timeframe}
+            timeframe={activeTf}
             height={380}
+            liveCandles={candles}
           />
         </div>
 
