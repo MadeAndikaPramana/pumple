@@ -1,4 +1,4 @@
-import type { Signal, LeaderboardEntry, Battle, Tribe, TierKey } from '@/types'
+import type { Signal, Battle, Tribe, TierKey } from '@/types'
 
 export const SIGNALS: Signal[] = [
   {
@@ -63,14 +63,126 @@ export const SIGNALS: Signal[] = [
   },
 ]
 
-export const LEADERBOARD: LeaderboardEntry[] = [
-  { rank: 1, user: 'LegendTrader',   tier: 'legend',     accuracy: '89.3%', calls: 247, streak: 18, pump: '+89,420' },
-  { rank: 2, user: 'WhaleMaster',    tier: 'whale',      accuracy: '82.1%', calls: 189, streak: 12, pump: '+64,230' },
-  { rank: 3, user: 'CryptoSniper_X', tier: 'sniper',     accuracy: '78.4%', calls: 312, streak: 7,  pump: '+45,110' },
-  { rank: 4, user: 'BlockchainBull', tier: 'trader',     accuracy: '74.8%', calls: 98,  streak: 4,  pump: '+28,750' },
-  { rank: 5, user: 'DeFiDegen',      tier: 'apprentice', accuracy: '71.2%', calls: 156, streak: 3,  pump: '+19,380' },
-  { rank: 6, user: 'AltcoinHunter',  tier: 'sniper',     accuracy: '68.9%', calls: 203, streak: 2,  pump: '+12,640' },
-  { rank: 7, user: 'MoonShotMike',   tier: 'trader',     accuracy: '65.4%', calls: 87,  streak: 1,  pump: '+8,920'  },
+export const LEADERBOARD = [
+  {
+    rank: 1,
+    user: 'LegendTrader',
+    tier: 'legend' as TierKey,
+    accuracy: '89.3%',
+    winRate: '84%',
+    calls: 1240,
+    streak: 12,
+    pump: '12,400',
+    portfolio: '$142,800',
+    holdings: 47,
+    recentSignals: [
+      { coin: 'BTC', multiple: '3.8x' },
+      { coin: 'SOL', multiple: '5.2x' },
+      { coin: 'AVAX', multiple: '2.1x' },
+    ]
+  },
+  {
+    rank: 2,
+    user: 'WhaleMaster',
+    tier: 'whale' as TierKey,
+    accuracy: '82.1%',
+    winRate: '77%',
+    calls: 567,
+    streak: 8,
+    pump: '8,200',
+    portfolio: '$89,400',
+    holdings: 23,
+    recentSignals: [
+      { coin: 'ETH', multiple: '2.9x' },
+      { coin: 'BTC', multiple: '4.1x' },
+      { coin: 'BNB', multiple: '1.8x' },
+    ]
+  },
+  {
+    rank: 3,
+    user: 'CryptoSniper_X',
+    tier: 'sniper' as TierKey,
+    accuracy: '78.4%',
+    winRate: '71%',
+    calls: 312,
+    streak: 7,
+    pump: '4,100',
+    portfolio: '$54,200',
+    holdings: 18,
+    recentSignals: [
+      { coin: 'SOL', multiple: '6.4x' },
+      { coin: 'AVAX', multiple: '3.3x' },
+      { coin: 'BTC', multiple: '2.7x' },
+    ]
+  },
+  {
+    rank: 4,
+    user: 'BlockchainBull',
+    tier: 'trader' as TierKey,
+    accuracy: '74.8%',
+    winRate: '68%',
+    calls: 98,
+    streak: 4,
+    pump: '2,800',
+    portfolio: '$28,750',
+    holdings: 12,
+    recentSignals: [
+      { coin: 'ETH', multiple: '2.4x' },
+      { coin: 'SOL', multiple: '3.1x' },
+      { coin: 'BNB', multiple: '1.9x' },
+    ]
+  },
+  {
+    rank: 5,
+    user: 'DeFiDegen',
+    tier: 'apprentice' as TierKey,
+    accuracy: '71.2%',
+    winRate: '65%',
+    calls: 156,
+    streak: 3,
+    pump: '1,900',
+    portfolio: '$19,380',
+    holdings: 9,
+    recentSignals: [
+      { coin: 'BTC', multiple: '2.2x' },
+      { coin: 'AVAX', multiple: '4.8x' },
+      { coin: 'ETH', multiple: '1.6x' },
+    ]
+  },
+  {
+    rank: 6,
+    user: 'AltcoinHunter',
+    tier: 'sniper' as TierKey,
+    accuracy: '68.9%',
+    winRate: '62%',
+    calls: 203,
+    streak: 2,
+    pump: '1,200',
+    portfolio: '$12,640',
+    holdings: 15,
+    recentSignals: [
+      { coin: 'SOL', multiple: '1.8x' },
+      { coin: 'BTC', multiple: '2.6x' },
+      { coin: 'ETH', multiple: '1.4x' },
+    ]
+  },
+  {
+    rank: 7,
+    user: 'MoonShotMike',
+    tier: 'trader' as TierKey,
+    accuracy: '65.4%',
+    winRate: '58%',
+    calls: 87,
+    streak: 1,
+    pump: '890',
+    portfolio: '$8,920',
+    holdings: 7,
+    recentSignals: [
+      { coin: 'BNB', multiple: '2.1x' },
+      { coin: 'SOL', multiple: '1.5x' },
+      { coin: 'BTC', multiple: '1.9x' },
+    ]
+  },
 ]
 
 export const BATTLES: Battle[] = [
