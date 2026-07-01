@@ -1,4 +1,4 @@
-import type { Signal, Battle, Tribe, TierKey } from '@/types'
+import type { Signal, Battle, Tribe, TierKey, TournamentBracket, TribeWar } from '@/types'
 
 export const SIGNALS: Signal[] = [
   {
@@ -188,21 +188,169 @@ export const LEADERBOARD = [
 export const BATTLES: Battle[] = [
   {
     id: 1,
-    coin: 'BTC/USDT',
-    user1: { name: 'LegendTrader',   tier: 'legend', prediction: 'LONG',  target: '$72,000' },
-    user2: { name: 'WhaleMaster',    tier: 'whale',  prediction: 'SHORT', target: '$64,000' },
+    mode: 'classic_1v1',
+    status: 'active',
+    player1: {
+      username: 'LegendTrader',
+      tier: 'legend',
+      accuracy: '89.3%',
+      virtualBalance: 10000,
+      currentPnL: 18.4,
+      isReady: true,
+      positions: [
+        { id: 1, coin: 'BTC', direction: 'LONG', entry: 67240, tp: 71200, sl: 65800, timeframe: '4H', pnlPercent: 12.3, status: 'active', openedAt: '2h ago' },
+        { id: 2, coin: 'SOL', direction: 'LONG', entry: 176.40, tp: 195.00, sl: 168.00, timeframe: '1H', pnlPercent: 6.1, status: 'won', openedAt: '5h ago' },
+      ]
+    },
+    player2: {
+      username: 'WhaleMaster',
+      tier: 'whale',
+      accuracy: '82.1%',
+      virtualBalance: 10000,
+      currentPnL: -4.2,
+      isReady: true,
+      positions: [
+        { id: 3, coin: 'ETH', direction: 'SHORT', entry: 3248, tp: 3050, sl: 3380, timeframe: '1H', pnlPercent: -4.2, status: 'active', openedAt: '3h ago' },
+      ]
+    },
+    duration: '24H',
     timeLeft: '2h 34m',
-    stake: '50 PUMP',
+    stake: '500 $PUMP',
     watchers: 847,
+    startedAt: '22h ago',
   },
   {
     id: 2,
-    coin: 'ETH/USDT',
-    user1: { name: 'CryptoSniper_X', tier: 'sniper', prediction: 'LONG',  target: '$3,500' },
-    user2: { name: 'BlockchainBull', tier: 'trader', prediction: 'SHORT', target: '$3,100' },
+    mode: 'classic_1v1',
+    status: 'active',
+    player1: {
+      username: 'CryptoSniper_X',
+      tier: 'sniper',
+      accuracy: '78.4%',
+      virtualBalance: 10000,
+      currentPnL: 9.7,
+      isReady: true,
+      positions: [
+        { id: 4, coin: 'AVAX', direction: 'LONG', entry: 38.20, tp: 43.50, sl: 35.00, timeframe: '4H', pnlPercent: 9.7, status: 'active', openedAt: '1h ago' },
+      ]
+    },
+    player2: {
+      username: 'BlockchainBull',
+      tier: 'trader',
+      accuracy: '74.8%',
+      virtualBalance: 10000,
+      currentPnL: 3.1,
+      isReady: true,
+      positions: [
+        { id: 5, coin: 'BNB', direction: 'LONG', entry: 412.00, tp: 445.00, sl: 395.00, timeframe: '4H', pnlPercent: 3.1, status: 'active', openedAt: '1h ago' },
+      ]
+    },
+    duration: '4H',
     timeLeft: '45m',
-    stake: '100 PUMP',
+    stake: '1,000 $PUMP',
     watchers: 1243,
+    startedAt: '3h ago',
+  },
+  {
+    id: 3,
+    mode: 'classic_1v1',
+    status: 'open',
+    isOpen: true,
+    player1: {
+      username: 'DeFiDegen',
+      tier: 'apprentice',
+      accuracy: '71.2%',
+      virtualBalance: 10000,
+      currentPnL: 0,
+      isReady: true,
+      positions: []
+    },
+    duration: '1H',
+    stake: '200 $PUMP',
+    watchers: 12,
+    coin: 'BTC/USDT',
+  },
+  {
+    id: 4,
+    mode: 'mock',
+    status: 'active',
+    player1: {
+      username: 'AltcoinHunter',
+      tier: 'sniper',
+      accuracy: '68.9%',
+      virtualBalance: 10000,
+      currentPnL: 22.1,
+      isReady: true,
+      positions: [
+        { id: 6, coin: 'SOL', direction: 'LONG', entry: 170.00, tp: 200.00, sl: 160.00, timeframe: '1D', pnlPercent: 22.1, status: 'active', openedAt: '2d ago' },
+      ]
+    },
+    player2: {
+      username: 'MoonShotMike',
+      tier: 'trader',
+      accuracy: '65.4%',
+      virtualBalance: 10000,
+      currentPnL: 8.3,
+      isReady: true,
+      positions: [
+        { id: 7, coin: 'SOL', direction: 'LONG', entry: 172.00, tp: 195.00, sl: 163.00, timeframe: '1D', pnlPercent: 8.3, status: 'active', openedAt: '2d ago' },
+      ]
+    },
+    duration: '1W',
+    timeLeft: '3d 12h',
+    watchers: 34,
+  },
+]
+
+export const TOURNAMENTS: TournamentBracket[] = [
+  {
+    id: 1,
+    name: 'Weekly Sniper Cup',
+    status: 'registering',
+    totalPlayers: 6,
+    maxPlayers: 8,
+    currentRound: 0,
+    totalRounds: 3,
+    prizePool: '8,000 $PUMP',
+    entryFee: '500 $PUMP',
+    matches: [],
+  },
+  {
+    id: 2,
+    name: 'Legend Invitational',
+    status: 'active',
+    totalPlayers: 8,
+    maxPlayers: 8,
+    currentRound: 2,
+    totalRounds: 3,
+    prizePool: '25,000 $PUMP',
+    entryFee: '2,000 $PUMP',
+    matches: [
+      { id: 1, round: 1, player1: 'LegendTrader', player2: 'WhaleMaster', winner: 'LegendTrader', status: 'completed' },
+      { id: 2, round: 1, player1: 'CryptoSniper_X', player2: 'BlockchainBull', winner: 'CryptoSniper_X', status: 'completed' },
+      { id: 3, round: 2, player1: 'LegendTrader', player2: 'CryptoSniper_X', winner: undefined, status: 'active' },
+    ],
+  },
+]
+
+export const TRIBE_WARS: TribeWar[] = [
+  {
+    id: 1,
+    tribe1: { name: 'SMC Snipers', tier: 'sniper', members: 12, totalPnL: 34.7, positions: 8 },
+    tribe2: { name: 'Whale Watch', tier: 'whale', members: 10, totalPnL: 28.2, positions: 6 },
+    status: 'active',
+    timeLeft: '4d 12h',
+    prizePool: '15,000 $PUMP',
+    watchers: 324,
+  },
+  {
+    id: 2,
+    tribe1: { name: 'Degen Arena', tier: 'apprentice', members: 8, totalPnL: 12.1, positions: 5 },
+    tribe2: { name: 'Legend Circle', tier: 'legend', members: 7, totalPnL: 41.3, positions: 9 },
+    status: 'active',
+    timeLeft: '2d 6h',
+    prizePool: '30,000 $PUMP',
+    watchers: 891,
   },
 ]
 

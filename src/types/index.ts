@@ -49,13 +49,79 @@ export interface LeaderboardEntry {
   pump: string
 }
 
-export interface Battle {
+export type BattleMode = 'classic_1v1' | 'tournament' | 'mock' | 'tribe_war'
+export type BattleStatus = 'open' | 'active' | 'completed' | 'cancelled'
+export type PositionDirection = 'LONG' | 'SHORT'
+export type PositionStatus = 'active' | 'won' | 'lost' | 'expired'
+
+export interface BattlePosition {
   id: number
   coin: string
-  user1: { name: string; tier: TierKey; prediction: 'LONG' | 'SHORT'; target: string }
-  user2: { name: string; tier: TierKey; prediction: 'LONG' | 'SHORT'; target: string }
+  direction: PositionDirection
+  entry: number
+  tp: number
+  sl: number
+  timeframe: string
+  pnlPercent: number
+  status: PositionStatus
+  openedAt: string
+}
+
+export interface BattlePlayer {
+  username: string
+  tier: TierKey
+  accuracy: string
+  virtualBalance: number
+  currentPnL: number
+  positions: BattlePosition[]
+  isReady: boolean
+}
+
+export interface Battle {
+  id: number
+  mode: BattleMode
+  status: BattleStatus
+  coin?: string
+  player1: BattlePlayer
+  player2?: BattlePlayer
+  duration: string
+  timeLeft?: string
+  stake?: string
+  watchers: number
+  startedAt?: string
+  winner?: string
+  isOpen?: boolean
+}
+
+export interface TournamentBracket {
+  id: number
+  name: string
+  status: 'registering' | 'active' | 'completed'
+  totalPlayers: number
+  maxPlayers: 8 | 16
+  currentRound: number
+  totalRounds: number
+  prizePool: string
+  entryFee: string
+  matches: TournamentMatch[]
+}
+
+export interface TournamentMatch {
+  id: number
+  round: number
+  player1: string
+  player2: string
+  winner?: string
+  status: 'pending' | 'active' | 'completed'
+}
+
+export interface TribeWar {
+  id: number
+  tribe1: { name: string; tier: TierKey; members: number; totalPnL: number; positions: number }
+  tribe2: { name: string; tier: TierKey; members: number; totalPnL: number; positions: number }
+  status: BattleStatus
   timeLeft: string
-  stake: string
+  prizePool: string
   watchers: number
 }
 

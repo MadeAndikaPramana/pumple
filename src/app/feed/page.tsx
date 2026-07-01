@@ -281,15 +281,19 @@ export default function FeedPage() {
               style={{ borderBottom: i < liveBattles.length - 1 ? '1px solid #1E2235' : 'none' }}
             >
               <div className="flex items-center justify-between mb-0.5">
-                <span className="text-[11px] font-bold text-pumple-text">{battle.coin}</span>
-                <span className="text-[10px] text-pumple-muted">{battle.timeLeft} left</span>
+                <span className="text-[11px] font-bold text-pumple-text truncate max-w-[150px]">
+                  {battle.player1.username} vs {battle.player2?.username ?? 'Open'}
+                </span>
+                <span className="text-[10px] text-pumple-muted flex-shrink-0">{battle.timeLeft ?? battle.duration} left</span>
               </div>
-              <div className="flex items-center gap-1.5 text-[11px]">
-                <span className="font-semibold text-pumple-text truncate max-w-[80px]">{battle.user1.name}</span>
-                <span style={{ color: '#4ADE80', fontSize: '9px', fontWeight: 700 }}>{battle.user1.prediction}</span>
+              <div className="flex items-center gap-2 text-[11px]">
+                <span style={{ color: battle.player1.currentPnL >= 0 ? '#4ADE80' : '#F43F5E', fontSize: '10px', fontWeight: 700 }}>
+                  {battle.player1.currentPnL >= 0 ? '+' : ''}{battle.player1.currentPnL}%
+                </span>
                 <span className="text-pumple-dim font-bold text-[9px]">VS</span>
-                <span style={{ color: '#F43F5E', fontSize: '9px', fontWeight: 700 }}>{battle.user2.prediction}</span>
-                <span className="font-semibold text-pumple-text truncate max-w-[80px]">{battle.user2.name}</span>
+                <span style={{ color: (battle.player2?.currentPnL ?? 0) >= 0 ? '#4ADE80' : '#F43F5E', fontSize: '10px', fontWeight: 700 }}>
+                  {battle.player2 ? `${battle.player2.currentPnL >= 0 ? '+' : ''}${battle.player2.currentPnL}%` : '—'}
+                </span>
               </div>
             </div>
           ))}

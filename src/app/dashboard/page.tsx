@@ -118,29 +118,30 @@ export default function DashboardPage() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-pumple-text">{topBattle.coin}</span>
-                  <span className="text-[10px] text-pumple-muted">{topBattle.stake} stake · {topBattle.watchers} watching</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="font-semibold text-pumple-primary">{topBattle.user1.name}</span>
-                  <span
-                    className="text-[10px] font-bold px-1.5 py-0.5 rounded"
-                    style={{ backgroundColor: '#4ADE8020', color: '#4ADE80' }}
-                  >
-                    {topBattle.user1.prediction}
+                  <span className="text-sm font-bold text-pumple-text truncate">
+                    {topBattle.player1.username} vs {topBattle.player2?.username ?? 'Open'}
                   </span>
-                  <span className="text-pumple-dim font-bold">VS</span>
-                  <span
-                    className="text-[10px] font-bold px-1.5 py-0.5 rounded"
-                    style={{ backgroundColor: '#F43F5E20', color: '#F43F5E' }}
-                  >
-                    {topBattle.user2.prediction}
+                  <span className="text-[10px] text-pumple-muted flex-shrink-0">
+                    {topBattle.stake ? `${topBattle.stake} · ` : ''}{topBattle.watchers} watching
                   </span>
-                  <span className="font-semibold text-pumple-red">{topBattle.user2.name}</span>
                 </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-pumple-primary">{topBattle.player1.username}</span>
+                  <span className="font-bold" style={{ color: topBattle.player1.currentPnL >= 0 ? '#4ADE80' : '#F43F5E' }}>
+                    {topBattle.player1.currentPnL >= 0 ? '+' : ''}{topBattle.player1.currentPnL}%
+                  </span>
+                </div>
+                {topBattle.player2 && (
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-pumple-text">{topBattle.player2.username}</span>
+                    <span className="font-bold" style={{ color: topBattle.player2.currentPnL >= 0 ? '#4ADE80' : '#F43F5E' }}>
+                      {topBattle.player2.currentPnL >= 0 ? '+' : ''}{topBattle.player2.currentPnL}%
+                    </span>
+                  </div>
+                )}
                 <div className="flex items-center gap-1 text-[11px] text-pumple-muted">
                   <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" />
-                  {topBattle.timeLeft} left
+                  {topBattle.timeLeft ?? topBattle.duration} left
                 </div>
               </div>
               <Link href="/battles" className="inline-block text-[11px] text-pumple-primary mt-3 hover:underline">
