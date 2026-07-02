@@ -154,7 +154,7 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
       <div className="flex justify-between items-center mt-2 pt-2 border-t border-pumple-border">
         <div className="flex items-center gap-1.5">
           <TierBadge tier={signal.tier} />
-          <span className="text-[11px] font-semibold text-pumple-text">@{signal.user}</span>
+          <Link href={`/profile/${signal.user}`} className="text-[11px] font-semibold text-pumple-text hover:underline">@{signal.user}</Link>
           <span className="text-[11px] text-pumple-primary">{signal.accuracy}</span>
         </div>
         <div className="flex items-center gap-1.5">

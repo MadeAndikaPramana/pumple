@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Trophy, Wallet, Box } from 'lucide-react'
 import { TIERS } from '@/types'
@@ -182,7 +183,7 @@ export default function LeaderboardPage() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-sm text-pumple-text">{entry.user}</span>
+                  <Link href={`/profile/${entry.user}`} className="font-bold text-sm text-pumple-text hover:underline">{entry.user}</Link>
                   <TierBadge tier={entry.tier} size="sm" />
                 </div>
                 <p className="text-[11px] text-pumple-muted">{entry.calls} recent calls</p>

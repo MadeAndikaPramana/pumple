@@ -493,3 +493,25 @@ export const AI_MESSAGES = [
     content: `Key risks to monitor:\n\n- **Stop Hunt Zone**: Bears may push to $66,400 to grab liquidity before the move\n- **Macro Risk**: FOMC meeting in 18 hours could cause volatility\n- **Invalidation**: Close below $66,200 on 4H would invalidate the bullish setup\n\nRecommended: Wait for a retest of the $67,200 OB before entry for a better risk-to-reward ratio.`,
   },
 ]
+
+export const PROFILE_SIGNALS = [
+  { id: 1, coin: 'BTC/USDT', direction: 'LONG' as const, entry: '$67,240', result: '+5.6%', status: 'won' as const, rarity: 'legendary', timeAgo: '2d ago', calledIt: 147 },
+  { id: 2, coin: 'SOL/USDT', direction: 'LONG' as const, entry: '$170.00', result: '+22.1%', status: 'won' as const, rarity: 'mythic', timeAgo: '5d ago', calledIt: 203 },
+  { id: 3, coin: 'ETH/USDT', direction: 'SHORT' as const, entry: '$3,380', result: '-2.1%', status: 'lost' as const, rarity: 'epic', timeAgo: '1w ago', calledIt: 34 },
+  { id: 4, coin: 'AVAX/USDT', direction: 'LONG' as const, entry: '$35.20', result: '+12.8%', status: 'won' as const, rarity: 'rare', timeAgo: '1w ago', calledIt: 89 },
+  { id: 5, coin: 'BNB/USDT', direction: 'LONG' as const, entry: '$398.00', result: null, status: 'active' as const, rarity: 'epic', timeAgo: '3h ago', calledIt: 56 },
+]
+
+export const PROFILE_BATTLES = [
+  { id: 1, opponent: 'WhaleMaster', opponentTier: 'whale' as TierKey, result: 'won', myPnL: '+18.4%', opponentPnL: '-4.2%', coin: 'BTC/USDT', duration: '24H', timeAgo: '1d ago' },
+  { id: 2, opponent: 'LegendTrader', opponentTier: 'legend' as TierKey, result: 'lost', myPnL: '+9.7%', opponentPnL: '+23.1%', coin: 'ETH/USDT', duration: '4H', timeAgo: '3d ago' },
+  { id: 3, opponent: 'BlockchainBull', opponentTier: 'trader' as TierKey, result: 'won', myPnL: '+31.2%', opponentPnL: '+12.4%', coin: 'SOL/USDT', duration: '1W', timeAgo: '1w ago' },
+]
+
+export const PROFILE_ACTIVITY = [
+  { id: 1, type: 'signal_won', content: 'BTC/USDT LONG call hit TP — +5.6%', timeAgo: '2d ago' },
+  { id: 2, type: 'battle_won', content: 'Won battle vs WhaleMaster (+18.4% vs -4.2%)', timeAgo: '1d ago' },
+  { id: 3, type: 'tribe_join', content: 'Joined SMC Snipers tribe', timeAgo: '1w ago' },
+  { id: 4, type: 'rank_up', content: 'Ranked up to Sniper tier', timeAgo: '2w ago' },
+  { id: 5, type: 'called_it', content: 'Called It on WhaleMaster\'s SOL/USDT signal', timeAgo: '5d ago' },
+]

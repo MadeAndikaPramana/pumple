@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { MessageSquare, Repeat2, Heart, Target, TrendingUp, TrendingDown } from 'lucide-react'
 import { TIERS, type TierKey } from '@/types'
@@ -148,7 +149,7 @@ export default function FeedPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-sm font-semibold text-pumple-text">{post.user}</span>
+                    <Link href={`/profile/${post.user}`} className="text-sm font-semibold text-pumple-text hover:underline">{post.user}</Link>
                     <TierBadge tier={post.tier as TierKey} size="sm" />
                     <span className="text-[11px] font-bold text-pumple-primary">{post.accuracy}</span>
                     <span className="text-pumple-muted text-[11px]">·</span>
