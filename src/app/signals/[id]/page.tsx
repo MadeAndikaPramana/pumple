@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
@@ -11,8 +11,6 @@ import { RARITY_COLORS, TIERS } from '@/types'
 import TierBadge from '@/components/ui/TierBadge'
 
 const TradingViewChart = dynamic(() => import('@/components/ui/TradingViewChart'), { ssr: false })
-
-const TIMEFRAMES = ['15m', '1H', '4H', '1D', '1W']
 
 const INTERVAL_MAP: Record<string, string> = {
   '15m': '15',
@@ -30,8 +28,31 @@ export default function SignalDetailPage() {
   const params = useParams()
   const signal = SIGNALS.find(s => s.id === Number(params.id))
 
-  // Hook must run unconditionally (before any early return).
+  // Hooks must run unconditionally (before any early return).
   const [activeTf, setActiveTf] = useState(signal?.timeframe ?? '4H')
+  const [livePrice, setLivePrice] = useState<number | null>(null)
+  const [priceChange24h, setPriceChange24h] = useState<{ change: number; pct: number } | null>(null)
+
+  useEffect(() => {
+    if (!signal) return
+    const symbol = signal.coin.replace('/', '')
+    const fetchPrice = async () => {
+      try {
+        const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`)
+        const data = await res.json()
+        setLivePrice(parseFloat(data.lastPrice))
+        setPriceChange24h({
+          change: parseFloat(data.priceChange),
+          pct: parseFloat(data.priceChangePercent),
+        })
+      } catch {
+        // fail silently, show static entry price as fallback
+      }
+    }
+    fetchPrice()
+    const interval = setInterval(fetchPrice, 5000)
+    return () => clearInterval(interval)
+  }, [signal])
 
   if (!signal) {
     return (
@@ -117,28 +138,68 @@ export default function SignalDetailPage() {
           </span>
         </div>
 
-        {/* 3. Hero chart */}
-        <div className="mb-2">
-          {/* Timeframe toggle */}
-          <div className="flex gap-1 mb-2">
-            {TIMEFRAMES.map(tf => (
-              <button
-                key={tf}
-                onClick={() => setActiveTf(tf)}
-                className={`text-[10px] font-bold px-2 py-1 rounded-[5px] transition-colors ${
-                  activeTf === tf
-                    ? 'bg-pumple-primary text-black'
-                    : 'bg-pumple-elevated text-pumple-muted border border-pumple-border hover:text-pumple-text'
-                }`}
-              >
-                {tf}
-              </button>
-            ))}
+        {/* 3. Price header — pump.fun style */}
+        <div className="bg-pumple-card border border-pumple-border rounded-t-[12px] px-4 py-3">
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-1">
+                <span className="text-2xl font-black font-mono text-pumple-text">
+                  {livePrice
+                    ? `$${livePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                    : `${signal.entry}`}
+                </span>
+                {priceChange24h && (
+                  <span className={`text-sm font-bold ${priceChange24h.pct >= 0 ? 'text-pumple-primary' : 'text-pumple-red'}`}>
+                    {priceChange24h.pct >= 0 ? '+' : ''}{priceChange24h.pct.toFixed(2)}% 24h
+                  </span>
+                )}
+                {livePrice && (
+                  <span className="flex items-center gap-1 text-[10px] text-pumple-muted">
+                    <span className="w-1.5 h-1.5 rounded-full bg-pumple-primary animate-pulse inline-block" />
+                    LIVE
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-4 text-[11px] text-pumple-muted">
+                <span>Entry <span className="text-pumple-text font-mono font-semibold">{signal.entry}</span></span>
+                <span>TP <span className="text-pumple-primary font-mono font-semibold">{signal.tp}</span></span>
+                <span>SL <span className="text-pumple-red font-mono font-semibold">{signal.sl}</span></span>
+                <span>R/R <span className="text-pumple-accent font-semibold">{(() => {
+                  const e = parseFloat(signal.entry.replace(/[$,]/g, ''))
+                  const tp = parseFloat(signal.tp.replace(/[$,]/g, ''))
+                  const sl = parseFloat(signal.sl.replace(/[$,]/g, ''))
+                  const rr = signal.direction === 'LONG' ? (tp - e) / (e - sl) : (e - tp) / (sl - e)
+                  return `1:${rr.toFixed(2)}`
+                })()}</span></span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Timeframe tabs */}
+              <div className="flex gap-1">
+                {['15m', '1H', '4H', '1D', '1W'].map(tf => (
+                  <button
+                    key={tf}
+                    onClick={() => setActiveTf(tf)}
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${
+                      activeTf === tf
+                        ? 'bg-pumple-primary text-black'
+                        : 'bg-pumple-elevated text-pumple-muted hover:text-pumple-text border border-pumple-border'
+                    }`}
+                  >
+                    {tf}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* TradingView chart — no border-radius on top, connects flush with header */}
+        <div className="border-x border-b border-pumple-border rounded-b-[12px] overflow-hidden">
           <TradingViewChart
             symbol={signal.coin.replace('/', '')}
-            interval={INTERVAL_MAP[activeTf] ?? '240'}
-            height={500}
+            interval={INTERVAL_MAP[activeTf] || '240'}
+            height={460}
           />
         </div>
 
