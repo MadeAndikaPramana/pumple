@@ -33,10 +33,11 @@ export default function TradingViewChart({ symbol, interval, height = 500 }: Tra
         backgroundColor: '#0A0B0F',
         gridColor: '#1E2235',
         enable_publishing: false,
-        hide_top_toolbar: false,
-        allow_symbol_change: true,
+        hide_side_toolbar: true,
+        hide_top_toolbar: true,
+        allow_symbol_change: false,
         save_image: false,
-        withdateranges: true,
+        withdateranges: false,
       })
     }
     containerRef.current.appendChild(script)
