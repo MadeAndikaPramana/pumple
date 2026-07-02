@@ -1,12 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
 
-declare global {
-  interface Window {
-    TradingView: any
-  }
-}
-
 interface TradingViewChartProps {
   symbol: string
   interval: string
@@ -15,51 +9,42 @@ interface TradingViewChartProps {
 
 export default function TradingViewChart({ symbol, interval, height = 500 }: TradingViewChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const containerId = `tv_${symbol}_${interval}`.replace(/[^a-zA-Z0-9_]/g, '_')
 
   useEffect(() => {
     if (!containerRef.current) return
+    const containerId = `tv_${Math.random().toString(36).slice(2)}`
+    containerRef.current.innerHTML = `<div id="${containerId}" style="height:${height}px"></div>`
 
-    const initWidget = () => {
-      if (!window.TradingView || !containerRef.current) return
-      containerRef.current.innerHTML = `<div id="${containerId}"></div>`
-      new window.TradingView.widget({
+    const script = document.createElement('script')
+    script.src = 'https://s3.tradingview.com/tv.js'
+    script.async = true
+    script.onload = () => {
+      if (typeof (window as any).TradingView === 'undefined') return
+      new (window as any).TradingView.widget({
         container_id: containerId,
-        width: '100%',
-        height: height,
+        autosize: true,
         symbol: `BINANCE:${symbol}`,
-        interval: interval,
+        interval,
         timezone: 'Etc/UTC',
         theme: 'dark',
         style: '1',
         locale: 'en',
         toolbar_bg: '#181B24',
-        backgroundColor: '#181B24',
+        backgroundColor: '#0A0B0F',
         gridColor: '#1E2235',
         enable_publishing: false,
         hide_top_toolbar: false,
-        hide_legend: false,
+        allow_symbol_change: true,
         save_image: false,
         withdateranges: true,
       })
     }
-
-    // Load tv.js once, reuse if already loaded
-    if (window.TradingView) {
-      initWidget()
-      return
-    }
-
-    const script = document.createElement('script')
-    script.src = 'https://s3.tradingview.com/tv.js'
-    script.async = true
-    script.onload = initWidget
-    document.head.appendChild(script)
+    containerRef.current.appendChild(script)
 
     return () => {
       if (containerRef.current) containerRef.current.innerHTML = ''
     }
-  }, [symbol, interval, height, containerId])
+  }, [symbol, interval, height])
 
   return (
     <div
