@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "frame-src 'self' https://s3.tradingview.com https://www.tradingview.com;",
+            value: "frame-src 'self' https://s3.tradingview.com https://www.tradingview.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://s3.tradingview.com https://www.tradingview.com;",
           },
         ],
       },
