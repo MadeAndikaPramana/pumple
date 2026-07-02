@@ -32,8 +32,8 @@ export default function Sidebar() {
     <div
       className="flex flex-col h-full"
       style={{
-        width: '150px',
-        minWidth: '150px',
+        width: '175px',
+        minWidth: '175px',
         backgroundColor: '#111318',
         borderRight: '1px solid #1E2235',
       }}
@@ -52,25 +52,41 @@ export default function Sidebar() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 p-2 flex flex-col gap-0.5">
+      <nav className="p-2 flex flex-col gap-0.5">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href
           return (
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs transition-colors ${
+              className={`flex items-center gap-2.5 px-3 py-3 rounded-md text-[13px] transition-colors ${
                 isActive
                   ? 'bg-pumple-primary/10 text-pumple-primary font-bold'
-                  : 'text-pumple-muted hover:bg-pumple-elevated hover:text-pumple-text'
+                  : 'text-pumple-muted font-medium hover:bg-pumple-elevated hover:text-pumple-text'
               }`}
             >
-              <Icon size={14} />
+              <Icon size={18} />
               {label}
             </Link>
           )
         })}
       </nav>
+
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* Quick stats */}
+      <div className="px-2 mb-2">
+        <div className="text-[9px] font-bold text-pumple-muted/50 tracking-widest px-2 mb-1 uppercase">Quick Stats</div>
+        <div className="bg-pumple-elevated rounded-[8px] p-2.5">
+          <div className="text-[10px] text-pumple-muted mb-1">Your accuracy</div>
+          <div className="text-sm font-black text-pumple-primary">78.4%</div>
+          <div className="text-[10px] text-pumple-muted mt-1.5 mb-1">Win streak</div>
+          <div className="text-sm font-black text-pumple-gold">5 days 🔥</div>
+          <div className="text-[10px] text-pumple-muted mt-1.5 mb-1">$PUMP balance</div>
+          <div className="text-sm font-black text-pumple-accent">⚡ 2,840</div>
+        </div>
+      </div>
 
       {/* Footer */}
       <div className="p-3" style={{ borderTop: '1px solid #1E2235' }}>

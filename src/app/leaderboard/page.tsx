@@ -66,14 +66,21 @@ function TopCard({ entry }: { entry: Entry }) {
 
       {/* User info */}
       <div className="flex items-center gap-3 mt-6 mb-4">
-        <div
-          className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-black flex-shrink-0"
-          style={{ backgroundColor: `${tierColor}20`, border: `2px solid ${tierColor}`, color: tierColor }}
-        >
-          {initials(entry.user)}
-        </div>
+        <Link href={`/profile/${entry.user}`} className="flex-shrink-0">
+          <div
+            className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-black"
+            style={{ backgroundColor: `${tierColor}20`, border: `2px solid ${tierColor}`, color: tierColor }}
+          >
+            {initials(entry.user)}
+          </div>
+        </Link>
         <div className="min-w-0">
-          <p className="text-base font-black text-pumple-text truncate">{entry.user}</p>
+          <Link
+            href={`/profile/${entry.user}`}
+            className="block text-base font-black text-pumple-text truncate hover:text-pumple-primary transition-colors"
+          >
+            {entry.user}
+          </Link>
           <p className="text-[11px] text-pumple-muted">{walletAddress(entry.user)}</p>
           <div className="mt-1">
             <TierBadge tier={entry.tier} size="sm" />
@@ -175,15 +182,17 @@ export default function LeaderboardPage() {
           <div key={entry.rank} className="bg-pumple-card border border-pumple-border rounded-[12px] p-4 mb-3">
             <div className="flex items-center gap-4">
               <span className="text-sm font-black text-pumple-muted w-6 flex-shrink-0">#{entry.rank}</span>
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-black flex-shrink-0"
-                style={{ backgroundColor: `${tierColor}20`, border: `2px solid ${tierColor}`, color: tierColor }}
-              >
-                {initials(entry.user)}
-              </div>
+              <Link href={`/profile/${entry.user}`} className="flex-shrink-0">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-black"
+                  style={{ backgroundColor: `${tierColor}20`, border: `2px solid ${tierColor}`, color: tierColor }}
+                >
+                  {initials(entry.user)}
+                </div>
+              </Link>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <Link href={`/profile/${entry.user}`} className="font-bold text-sm text-pumple-text hover:underline">{entry.user}</Link>
+                  <Link href={`/profile/${entry.user}`} className="font-bold text-sm text-pumple-text hover:text-pumple-primary transition-colors">{entry.user}</Link>
                   <TierBadge tier={entry.tier} size="sm" />
                 </div>
                 <p className="text-[11px] text-pumple-muted">{entry.calls} recent calls</p>
