@@ -9,11 +9,18 @@ import { ArrowLeft, Shield, Target, MessageSquare, ThumbsUp, CheckCircle, ArrowR
 import { SIGNALS, SIGNAL_REPLIES, CALLED_IT_USERS } from '@/lib/mock-data'
 import { RARITY_COLORS, TIERS } from '@/types'
 import TierBadge from '@/components/ui/TierBadge'
-import { useLiveKlines } from '@/lib/use-live-klines'
 
-const MiniChart = dynamic(() => import('@/components/ui/MiniChart'), { ssr: false })
+const TradingViewChart = dynamic(() => import('@/components/ui/TradingViewChart'), { ssr: false })
 
 const TIMEFRAMES = ['15m', '1H', '4H', '1D', '1W']
+
+const INTERVAL_MAP: Record<string, string> = {
+  '15m': '15',
+  '1H': '60',
+  '4H': '240',
+  '1D': 'D',
+  '1W': 'W',
+}
 
 function parsePrice(str: string): number {
   return parseFloat(str.replace(/[$,]/g, ''))
@@ -23,9 +30,8 @@ export default function SignalDetailPage() {
   const params = useParams()
   const signal = SIGNALS.find(s => s.id === Number(params.id))
 
-  // Hooks must run unconditionally (before any early return).
+  // Hook must run unconditionally (before any early return).
   const [activeTf, setActiveTf] = useState(signal?.timeframe ?? '4H')
-  const { candles, isLive, error } = useLiveKlines(signal?.coin ?? '', activeTf, 60)
 
   if (!signal) {
     return (
@@ -104,20 +110,11 @@ export default function SignalDetailPage() {
           <span className="font-bold text-sm text-pumple-text">Active</span>
           <span className="text-pumple-muted text-xs">· Posted {signal.timeAgo}</span>
 
-          {/* Live data indicator */}
-          {isLive ? (
-            <span className="flex items-center gap-1 ml-auto">
-              <span className="w-1.5 h-1.5 rounded-full bg-pumple-primary animate-pulse" />
-              <span className="text-[10px] font-bold text-pumple-primary tracking-wide">LIVE</span>
-            </span>
-          ) : error ? (
-            <span className="flex items-center gap-1 ml-auto">
-              <span className="w-1.5 h-1.5 rounded-full bg-gray-500" />
-              <span className="text-[10px] text-pumple-muted">Static data</span>
-            </span>
-          ) : candles.length === 0 ? (
-            <span className="ml-auto text-[10px] text-pumple-muted">Connecting...</span>
-          ) : null}
+          {/* Live indicator — TradingView streams live data natively */}
+          <span className="flex items-center gap-1 ml-auto">
+            <span className="w-1.5 h-1.5 rounded-full bg-pumple-primary animate-pulse" />
+            <span className="text-[10px] font-bold text-pumple-primary tracking-wide">LIVE</span>
+          </span>
         </div>
 
         {/* 3. Hero chart */}
@@ -138,14 +135,10 @@ export default function SignalDetailPage() {
               </button>
             ))}
           </div>
-          <MiniChart
-            entry={entryNum}
-            tp={tpNum}
-            sl={slNum}
-            direction={signal.direction}
-            timeframe={activeTf}
-            height={380}
-            liveCandles={candles}
+          <TradingViewChart
+            symbol={signal.coin.replace('/', '')}
+            interval={INTERVAL_MAP[activeTf] ?? '240'}
+            height={500}
           />
         </div>
 
