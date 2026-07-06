@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X } from 'lucide-react'
+import { X, Swords, Trophy, Drama, Shield, type LucideIcon } from 'lucide-react'
 import type { BattleMode } from '@/types'
 import { TRIBES } from '@/lib/mock-data'
 
@@ -10,11 +10,11 @@ interface CreateBattleModalProps {
   onClose: () => void
 }
 
-const MODES: { id: BattleMode; icon: string; name: string; desc: string }[] = [
-  { id: 'classic_1v1', icon: '⚔️', name: 'Classic 1v1', desc: 'Head-to-head, 24H max' },
-  { id: 'tournament',  icon: '🏆', name: 'Tournament',  desc: '8-16 player bracket' },
-  { id: 'mock',        icon: '🎭', name: 'Mock',        desc: 'Practice, no stake' },
-  { id: 'tribe_war',   icon: '🛡️', name: 'Tribe War',   desc: 'Tribe vs Tribe' },
+const MODES: { id: BattleMode; icon: LucideIcon; color: string; name: string; desc: string }[] = [
+  { id: 'classic_1v1', icon: Swords, color: '#4ADE80', name: 'Classic 1v1', desc: 'Head-to-head, 24H max' },
+  { id: 'tournament',  icon: Trophy, color: '#FBBF24', name: 'Tournament',  desc: '8-16 player bracket' },
+  { id: 'mock',        icon: Drama,  color: '#A78BFA', name: 'Mock',        desc: 'Practice, no stake' },
+  { id: 'tribe_war',   icon: Shield, color: '#38BDF8', name: 'Tribe War',   desc: 'Tribe vs Tribe' },
 ]
 
 const QUICK_COINS = ['$BTC', '$ETH', '$SOL', '$AVAX', '$BNB']
@@ -83,7 +83,7 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
       >
         {/* Header */}
         <div className="flex justify-between items-center p-4" style={{ borderBottom: '1px solid #1E2235' }}>
-          <span className="text-sm font-black text-pumple-text">Create a battle</span>
+          <span className="font-display text-sm font-bold text-pumple-text">Create a battle</span>
           <button
             onClick={onClose}
             className="w-7 h-7 flex items-center justify-center rounded-md text-pumple-muted hover:text-pumple-text hover:bg-pumple-elevated transition-colors"
@@ -97,17 +97,23 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
           <div className="grid grid-cols-2 gap-2 mb-4">
             {MODES.map(m => {
               const active = mode === m.id
+              const Icon = m.icon
               return (
                 <button
                   key={m.id}
                   onClick={() => setMode(m.id)}
-                  className={`rounded-[10px] p-3 cursor-pointer text-center transition-colors ${
+                  className={`rounded-[10px] p-3 cursor-pointer text-center transition-all ${
                     active
-                      ? 'border border-pumple-primary bg-pumple-primary/10'
+                      ? 'border border-pumple-primary bg-pumple-primary/10 shadow-[0_0_16px_rgba(74,222,128,0.15)]'
                       : 'border border-pumple-border bg-pumple-elevated hover:border-pumple-dim'
                   }`}
                 >
-                  <div className="text-2xl mb-1">{m.icon}</div>
+                  <div
+                    className="w-9 h-9 rounded-[10px] mx-auto mb-1.5 flex items-center justify-center"
+                    style={{ backgroundColor: `${m.color}18`, border: `1px solid ${m.color}35` }}
+                  >
+                    <Icon size={17} style={{ color: m.color }} />
+                  </div>
                   <p className="text-sm font-bold text-pumple-text">{m.name}</p>
                   <p className="text-[10px] text-pumple-muted">{m.desc}</p>
                 </button>
@@ -300,14 +306,10 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
 
         {/* Footer */}
         <div className="flex justify-end gap-2 p-4" style={{ borderTop: '1px solid #1E2235' }}>
-          <button
-            onClick={onClose}
-            className="text-[11px] font-bold px-4 py-2 rounded-[8px] text-pumple-muted"
-            style={{ border: '1px solid #1E2235', backgroundColor: '#181B24' }}
-          >
+          <button onClick={onClose} className="btn-ghost text-[11px] px-4 py-2">
             Cancel
           </button>
-          <button className="bg-pumple-primary text-black font-bold px-6 py-2 rounded-[8px] text-sm hover:bg-pumple-primary/90 transition-colors">
+          <button className="btn-degen text-sm px-6 py-2">
             Create Battle
           </button>
         </div>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Swords, Coins, Target, Eye } from 'lucide-react'
+import { Swords, Coins, Target, Eye, Trophy, Drama, Shield, Plus, type LucideIcon } from 'lucide-react'
 import StatCard from '@/components/ui/StatCard'
 import BattleCard from '@/components/battle/BattleCard'
 import TournamentCard from '@/components/battle/TournamentCard'
@@ -19,12 +19,12 @@ const ARENA_STATS = [
   { label: 'Watching now',   value: '2,090',       icon: Eye,    color: '#38BDF8' },
 ]
 
-const MODE_TABS: { id: Mode; label: string }[] = [
+const MODE_TABS: { id: Mode; label: string; icon?: LucideIcon }[] = [
   { id: 'all',         label: 'All' },
-  { id: 'classic_1v1', label: '⚔️ Classic 1v1' },
-  { id: 'tournament',  label: '🏆 Tournament' },
-  { id: 'mock',        label: '🎭 Mock' },
-  { id: 'tribe_war',   label: '🛡️ Tribe War' },
+  { id: 'classic_1v1', label: 'Classic 1v1', icon: Swords },
+  { id: 'tournament',  label: 'Tournament',  icon: Trophy },
+  { id: 'mock',        label: 'Mock',        icon: Drama },
+  { id: 'tribe_war',   label: 'Tribe War',   icon: Shield },
 ]
 
 export default function BattlesPage() {
@@ -44,14 +44,18 @@ export default function BattlesPage() {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-black text-pumple-text">Trading Arena</h1>
+          <h1 className="flex items-center gap-2 font-display text-2xl font-bold text-pumple-text">
+            <Swords size={22} className="text-pumple-accent" style={{ filter: 'drop-shadow(0 0 8px rgba(163,230,53,0.5))' }} />
+            Trading Arena
+          </h1>
           <p className="text-sm text-pumple-muted mt-1">Compete. Prove your accuracy. Earn $PUMP.</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-1.5 bg-pumple-primary text-black font-bold text-[11px] rounded-[8px] px-4 py-2 hover:bg-pumple-primary/90 transition-colors flex-shrink-0"
+          className="btn-degen text-[11px] px-4 py-2 flex-shrink-0"
         >
-          + Create Battle
+          <Plus size={12} strokeWidth={3} />
+          Create Battle
         </button>
       </div>
 
@@ -64,17 +68,18 @@ export default function BattlesPage() {
 
       {/* Mode tabs */}
       <div className="flex gap-0 border-b border-pumple-border mb-6">
-        {MODE_TABS.map(tab => (
+        {MODE_TABS.map(({ id, label, icon: Icon }) => (
           <button
-            key={tab.id}
-            onClick={() => setActiveMode(tab.id)}
-            className={`px-4 py-2.5 text-sm transition-colors ${
-              activeMode === tab.id
+            key={id}
+            onClick={() => setActiveMode(id)}
+            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm cursor-pointer transition-colors ${
+              activeMode === id
                 ? 'border-b-2 border-pumple-primary text-pumple-text font-bold -mb-px'
                 : 'text-pumple-muted hover:text-pumple-text'
             }`}
           >
-            {tab.label}
+            {Icon && <Icon size={13} className={activeMode === id ? 'text-pumple-primary' : ''} />}
+            {label}
           </button>
         ))}
       </div>

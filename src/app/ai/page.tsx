@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ChartNoAxesCombined, Send } from 'lucide-react'
+import { ChartNoAxesCombined, Send, Bot, Sparkles } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { AI_MESSAGES } from '@/lib/mock-data'
@@ -58,11 +58,17 @@ export default function AIPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
       className="flex gap-4 h-full"
-      style={{ height: 'calc(100vh - 44px - 32px)' }}
+      style={{ height: 'calc(100dvh - 48px - 32px)' }}
     >
       {/* Main column */}
       <div className="flex-1 min-w-0 flex flex-col">
-        <h1 className="text-sm font-bold text-pumple-text mb-2.5">AI Analyst</h1>
+        <h1 className="flex items-center gap-2 font-display text-base font-bold text-pumple-text mb-2.5">
+          <span className="w-6 h-6 rounded-md bg-pumple-primary/15 border border-pumple-primary/30 flex items-center justify-center">
+            <Bot size={13} className="text-pumple-primary" />
+          </span>
+          AI Analyst
+          <Sparkles size={12} className="text-pumple-accent" />
+        </h1>
 
         {/* Quick actions */}
         <div className="flex gap-1.5 flex-wrap mb-2.5">
@@ -70,7 +76,7 @@ export default function AIPage() {
             <button
               key={action}
               onClick={() => setInput(action)}
-              className="text-[11px] text-pumple-muted bg-pumple-elevated border border-pumple-border rounded-[5px] px-2.5 py-1 hover:text-pumple-text transition-colors"
+              className="pill !rounded-lg text-[11px] px-2.5 py-1"
             >
               {action}
             </button>
@@ -87,6 +93,7 @@ export default function AIPage() {
                   style={{
                     backgroundColor: '#4ADE8020',
                     border: '1px solid #4ADE8040',
+                    boxShadow: '0 0 10px rgba(74,222,128,0.2)',
                   }}
                 >
                   <ChartNoAxesCombined size={12} className="text-pumple-primary" />
@@ -139,7 +146,7 @@ export default function AIPage() {
           />
           <button
             onClick={handleSend}
-            className="flex items-center gap-1.5 bg-pumple-primary text-black font-bold rounded-[8px] px-3.5 py-2 text-xs hover:bg-pumple-primary/90 transition-colors"
+            className="btn-degen text-xs px-4 py-2"
           >
             <Send size={12} />
             Send
@@ -151,8 +158,8 @@ export default function AIPage() {
       <div className="w-[280px] flex-shrink-0 hidden lg:flex flex-col gap-4">
 
         {/* Suggested prompts */}
-        <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4">
-          <p className="text-sm font-bold text-pumple-text mb-3">Suggested prompts</p>
+        <div className="p-card p-4">
+          <p className="font-display text-sm font-bold text-pumple-text mb-3">Suggested prompts</p>
           {SUGGESTED_PROMPTS.map((prompt, i) => (
             <div
               key={prompt}
@@ -166,8 +173,8 @@ export default function AIPage() {
         </div>
 
         {/* Recent insights */}
-        <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4">
-          <p className="text-sm font-bold text-pumple-text mb-3">Recent insights</p>
+        <div className="p-card p-4">
+          <p className="font-display text-sm font-bold text-pumple-text mb-3">Recent insights</p>
           <div className="flex flex-col gap-3">
             {RECENT_INSIGHTS.map(insight => (
               <div key={insight.text} className="flex items-start gap-2">

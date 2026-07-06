@@ -46,13 +46,13 @@ export default function TribeWarCard({ war }: { war: TribeWar }) {
   const split = Math.max(5, Math.min(95, 50 + (war.tribe1.totalPnL - war.tribe2.totalPnL) / 2))
 
   return (
-    <div className="bg-pumple-card border border-pumple-border rounded-[16px] overflow-hidden mb-4">
+    <div className="p-card p-card-hover rounded-[16px] overflow-hidden mb-4">
       {/* Accent stripe */}
       <div className="h-1" style={{ background: `linear-gradient(to right, ${c1}, ${c2})` }} />
 
       {/* Header */}
       <div className="p-4 pb-0 flex items-center justify-between flex-wrap gap-2">
-        <span className="text-xs font-black text-pumple-muted tracking-wide">TRIBE WAR</span>
+        <span className="font-display text-xs font-bold text-pumple-muted tracking-[0.18em]">TRIBE WAR</span>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1 text-[11px] font-bold text-pumple-gold">
             <Clock size={11} />
@@ -101,7 +101,8 @@ export default function TribeWarCard({ war }: { war: TribeWar }) {
         <span className="text-[11px] text-pumple-muted">
           {war.tribe1.members + war.tribe2.members} members contributing
         </span>
-        <button className="bg-pumple-elevated border border-pumple-border text-[11px] font-bold px-3 py-1 rounded-md text-pumple-muted hover:border-pumple-primary hover:text-pumple-primary transition-colors">
+        <button className="btn-ghost text-[11px] px-3 py-1">
+          <Eye size={11} />
           Watch War
         </button>
       </div>

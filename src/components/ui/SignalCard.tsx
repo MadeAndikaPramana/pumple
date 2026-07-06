@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { ThumbsUp, CheckCircle, ArrowRight } from 'lucide-react'
+import { ThumbsUp, CheckCircle, ArrowRight, TrendingUp, TrendingDown } from 'lucide-react'
 import { RARITY_COLORS, type Signal } from '@/types'
 import TierBadge from './TierBadge'
 
@@ -20,12 +20,14 @@ function parsePrice(str: string): number {
 
 export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProps) {
   const rarityColor = RARITY_COLORS[signal.rarity]
-  const directionColor = signal.direction === 'LONG' ? '#4ADE80' : '#F43F5E'
+  const isLong = signal.direction === 'LONG'
+  const directionColor = isLong ? '#4ADE80' : '#F43F5E'
+  const isTopRarity = signal.rarity === 'legendary' || signal.rarity === 'mythic'
   const entryNum = parsePrice(signal.entry)
   const tpNum = parsePrice(signal.tp)
   const slNum = parsePrice(signal.sl)
 
-  const rrRatio = signal.direction === 'LONG'
+  const rrRatio = isLong
     ? ((tpNum - entryNum) / (entryNum - slNum)).toFixed(2)
     : ((entryNum - tpNum) / (slNum - entryNum)).toFixed(2)
 
@@ -43,48 +45,53 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
 
   return (
     <div
-      className="bg-pumple-card rounded-[10px] p-3 relative overflow-hidden mb-3"
-      style={{ border: `1px solid ${rarityColor}30` }}
+      className="bg-pumple-card rounded-[14px] p-3 relative overflow-hidden mb-3 p-card-hover"
+      style={{
+        border: `1px solid ${rarityColor}${isTopRarity ? '50' : '30'}`,
+        boxShadow: isTopRarity ? `0 0 22px ${rarityColor}14` : undefined,
+      }}
     >
       {/* Top accent stripe */}
       <div
-        className="absolute top-0 left-0 right-0 h-[2px]"
-        style={{ backgroundColor: `${rarityColor}70` }}
+        className="absolute top-0 left-0 right-0 h-[2.5px]"
+        style={{ background: `linear-gradient(90deg, transparent, ${rarityColor}, transparent)` }}
       />
 
       {/* Row 1: Direction + coin + timeframe + R/R | rarity + time */}
       <div className="flex justify-between items-center mb-2 mt-1">
         <div className="flex items-center gap-2">
           <span
-            className="text-[11px] font-bold px-2 py-0.5 rounded-[4px]"
+            className="flex items-center gap-1 text-[11px] font-black px-2 py-0.5 rounded-md"
             style={{
-              backgroundColor: `${directionColor}20`,
+              backgroundColor: `${directionColor}1c`,
               color: directionColor,
-              border: `1px solid ${directionColor}40`,
+              border: `1px solid ${directionColor}45`,
             }}
           >
+            {isLong ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
             {signal.direction}
           </span>
           <Link
             href={`/signals/${signal.id}`}
-            className="text-[15px] font-bold text-pumple-text hover:underline cursor-pointer"
+            className="font-display text-[15px] font-bold text-pumple-text hover:text-pumple-primary transition-colors cursor-pointer"
           >
             {signal.coin}
           </Link>
-          <span className="text-[10px] text-pumple-muted bg-pumple-elevated px-1.5 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold text-pumple-muted bg-pumple-elevated px-1.5 py-0.5 rounded-full">
             {signal.timeframe}
           </span>
-          <span className="text-[10px] font-bold text-pumple-accent bg-pumple-accent/10 border border-pumple-accent/30 px-1.5 py-0.5 rounded">
+          <span className="text-[10px] font-bold tnum text-pumple-accent bg-pumple-accent/10 border border-pumple-accent/30 px-1.5 py-0.5 rounded">
             R/R 1:{rrRatio}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <span
-            className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-[3px]"
+            className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded"
             style={{
               backgroundColor: `${rarityColor}20`,
               color: rarityColor,
               border: `1px solid ${rarityColor}40`,
+              textShadow: isTopRarity ? `0 0 10px ${rarityColor}90` : undefined,
             }}
           >
             {signal.rarity}
@@ -97,12 +104,15 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
       <div className="mb-2">
         <div className="flex justify-between items-center mb-1">
           <span className="text-pumple-muted text-[11px]">Confidence</span>
-          <span className="text-xs font-bold" style={{ color: rarityColor }}>{signal.confidence}%</span>
+          <span className="text-xs font-black tnum" style={{ color: rarityColor }}>{signal.confidence}%</span>
         </div>
-        <div className="h-[3px] bg-pumple-dim rounded-full overflow-hidden">
+        <div className="bar-track">
           <div
-            className="h-full rounded-full"
-            style={{ width: `${signal.confidence}%`, backgroundColor: rarityColor }}
+            className="bar-fill"
+            style={{
+              width: `${signal.confidence}%`,
+              background: `linear-gradient(90deg, ${rarityColor}80, ${rarityColor})`,
+            }}
           />
         </div>
       </div>
@@ -135,7 +145,8 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
             <button
               key={i}
               onClick={() => setSlideIndex(i)}
-              className={`w-1.5 h-1.5 rounded-full transition-colors ${i === slideIndex ? 'bg-pumple-primary' : 'bg-pumple-dim'}`}
+              aria-label={`Slide ${i + 1}`}
+              className={`w-1.5 h-1.5 rounded-full cursor-pointer transition-colors ${i === slideIndex ? 'bg-pumple-primary' : 'bg-pumple-dim'}`}
             />
           ))}
         </div>
@@ -145,32 +156,40 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
       <div className="mt-2">
         <div className="flex gap-1.5 flex-wrap">
           {signal.tags.map(tag => (
-            <span key={tag} className="text-[10px] text-pumple-primary/70 font-semibold">#{tag}</span>
+            <span
+              key={tag}
+              className="text-[10px] font-semibold text-pumple-primary/80 bg-pumple-primary/8 border border-pumple-primary/15 px-1.5 py-0.5 rounded-md"
+            >
+              #{tag}
+            </span>
           ))}
         </div>
       </div>
 
       {/* Footer */}
-      <div className="flex justify-between items-center mt-2 pt-2 border-t border-pumple-border">
+      <div className="flex justify-between items-center mt-2.5 pt-2.5 border-t border-pumple-border">
         <div className="flex items-center gap-1.5">
           <TierBadge tier={signal.tier} />
-          <Link href={`/profile/${signal.user}`} className="text-[11px] font-semibold text-pumple-text hover:underline">@{signal.user}</Link>
-          <span className="text-[11px] text-pumple-primary">{signal.accuracy}</span>
+          <Link href={`/profile/${signal.user}`} className="text-[11px] font-semibold text-pumple-text hover:text-pumple-primary transition-colors">
+            @{signal.user}
+          </Link>
+          <span className="text-[11px] font-bold tnum text-pumple-primary">{signal.accuracy}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <button className="flex items-center gap-1 text-[11px] text-pumple-muted bg-pumple-elevated border border-pumple-border rounded-[5px] px-2 py-1 hover:text-pumple-text transition-colors">
+          <button className="btn-ghost text-[11px] px-2 py-1 rounded-md">
             <ThumbsUp size={10} />
-            {signal.likes}
+            <span className="tnum">{signal.likes}</span>
           </button>
-          <button className="flex items-center gap-1 text-[11px] text-pumple-muted bg-pumple-elevated border border-pumple-border rounded-[5px] px-2 py-1 hover:text-pumple-text transition-colors">
+          <button className="btn-ghost text-[11px] px-2 py-1 rounded-md">
             <CheckCircle size={10} />
-            Called it {signal.calledIt}
+            Called it <span className="tnum">{signal.calledIt}</span>
           </button>
           <Link
             href={`/signals/${signal.id}`}
-            className="flex items-center gap-1 text-[10px] text-pumple-muted hover:text-pumple-primary transition-colors"
+            aria-label="Open signal"
+            className="flex items-center justify-center w-6 h-6 rounded-md text-pumple-muted hover:text-pumple-primary hover:bg-pumple-primary/10 transition-colors"
           >
-            <ArrowRight size={12} />
+            <ArrowRight size={13} />
           </Link>
         </div>
       </div>

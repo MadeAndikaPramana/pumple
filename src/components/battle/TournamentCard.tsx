@@ -15,12 +15,12 @@ export default function TournamentCard({ tournament }: { tournament: TournamentB
   const rounds = Array.from(new Set(tournament.matches.map(m => m.round))).sort((a, b) => a - b)
 
   return (
-    <div className="bg-pumple-card border border-pumple-border rounded-[16px] p-5 mb-4">
+    <div className="p-card p-card-hover rounded-[16px] p-5 mb-4">
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
-          <Trophy size={18} className="text-pumple-gold flex-shrink-0" />
-          <span className="text-base font-black text-pumple-text truncate">{tournament.name}</span>
+          <Trophy size={18} className="text-pumple-gold flex-shrink-0" style={{ filter: 'drop-shadow(0 0 6px rgba(251,191,36,0.5))' }} />
+          <span className="font-display text-base font-bold text-pumple-text truncate">{tournament.name}</span>
           <span
             className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full flex-shrink-0"
             style={{ backgroundColor: `${status.color}20`, color: status.color, border: `1px solid ${status.color}40` }}
@@ -31,7 +31,7 @@ export default function TournamentCard({ tournament }: { tournament: TournamentB
         </div>
         <div className="text-right flex-shrink-0">
           <p className="text-[9px] font-bold text-pumple-muted tracking-widest">PRIZE POOL</p>
-          <p className="text-lg font-black text-pumple-accent">{tournament.prizePool}</p>
+          <p className="font-display text-lg font-bold tnum text-pumple-accent">{tournament.prizePool}</p>
         </div>
       </div>
 
@@ -58,8 +58,11 @@ export default function TournamentCard({ tournament }: { tournament: TournamentB
             <span className="text-[10px] text-pumple-muted">Registration</span>
             <span className="text-[10px] font-bold text-pumple-text">{tournament.totalPlayers}/{tournament.maxPlayers}</span>
           </div>
-          <div className="h-2 bg-pumple-dim rounded-full overflow-hidden">
-            <div className="h-full bg-pumple-primary transition-all duration-500" style={{ width: `${regPct}%` }} />
+          <div className="bar-track !h-2">
+            <div
+              className="bar-fill transition-all duration-500"
+              style={{ width: `${regPct}%`, background: 'linear-gradient(90deg, #4ADE8080, #4ADE80)' }}
+            />
           </div>
         </div>
       )}
@@ -100,7 +103,7 @@ export default function TournamentCard({ tournament }: { tournament: TournamentB
 
       {/* Footer */}
       <div className="flex justify-end">
-        <button className="bg-pumple-primary text-black text-[11px] font-bold px-4 py-1.5 rounded-md hover:bg-pumple-primary/90 transition-colors">
+        <button className="btn-degen text-[11px] px-4 py-1.5">
           {tournament.status === 'registering' ? 'Join Tournament' : 'View Bracket'}
         </button>
       </div>

@@ -1,28 +1,28 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Clock, Coins, Eye } from 'lucide-react'
+import { Clock, Coins, Eye, Sword, Sparkles } from 'lucide-react'
 import { TIERS, type Battle, type BattlePlayer } from '@/types'
 import TierBadge from '@/components/ui/TierBadge'
 
 const KEYFRAMES = `
 @keyframes slideInLeft {
-  from { transform: translateX(-40px) rotate(-45deg); opacity: 0; }
-  to { transform: translateX(0) rotate(-45deg); opacity: 1; }
+  from { transform: translateX(-40px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 @keyframes slideInRight {
-  from { transform: translateX(40px) rotate(45deg); opacity: 0; }
-  to { transform: translateX(0) rotate(45deg); opacity: 1; }
+  from { transform: translateX(40px) scaleX(-1); opacity: 0; }
+  to { transform: translateX(0) scaleX(-1); opacity: 1; }
 }
 @keyframes clash {
   0% { transform: scale(1); }
-  50% { transform: scale(1.3); filter: brightness(2); }
+  50% { transform: scale(1.3); filter: brightness(2) drop-shadow(0 0 8px rgba(74,222,128,0.8)); }
   100% { transform: scale(1); }
 }
 @keyframes sparkle {
-  0% { opacity: 0; transform: scale(0); }
-  50% { opacity: 1; transform: scale(1.5); }
-  100% { opacity: 0; transform: scale(0); }
+  0% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.5) rotate(90deg); }
+  100% { opacity: 0; transform: scale(0) rotate(180deg); }
 }
 `
 
@@ -67,8 +67,15 @@ function PlayerSide({ player, align }: { player: BattlePlayer; align: 'left' | '
         </div>
         <div className="h-2 bg-pumple-dim rounded-full overflow-hidden w-full">
           <div
-            className={`h-full transition-all duration-1000 ${positive ? 'bg-pumple-primary' : 'bg-pumple-red'}`}
-            style={{ width: `${fill}%`, marginLeft: isRight ? 'auto' : 0 }}
+            className="h-full rounded-full transition-all duration-1000"
+            style={{
+              width: `${fill}%`,
+              marginLeft: isRight ? 'auto' : 0,
+              background: positive
+                ? 'linear-gradient(90deg, #4ADE8070, #4ADE80)'
+                : 'linear-gradient(90deg, #F43F5E70, #F43F5E)',
+              boxShadow: positive ? '0 0 8px rgba(74,222,128,0.4)' : '0 0 8px rgba(244,63,94,0.4)',
+            }}
           />
         </div>
       </div>
@@ -110,7 +117,7 @@ export default function BattleCard({ battle }: { battle: Battle }) {
   const isOpen = battle.status === 'open' || !battle.player2
 
   return (
-    <div className="bg-pumple-card border border-pumple-border rounded-[16px] overflow-hidden relative">
+    <div className="bg-pumple-card border border-pumple-border rounded-[16px] overflow-hidden relative p-card-hover">
       <style>{KEYFRAMES}</style>
 
       {/* Mock badge */}
@@ -126,26 +133,26 @@ export default function BattleCard({ battle }: { battle: Battle }) {
           className="flex items-center justify-center"
           style={phase === 'clash' ? { animationName: 'clash', animationDuration: '0.4s', animationFillMode: 'forwards' } : undefined}
         >
-          {/* Left sword */}
+          {/* Left sword — Lucide's sword glyph is already diagonal, so no extra rotation */}
           <div
-            className="text-2xl"
-            style={{ animationName: 'slideInLeft', animationDuration: '0.4s', animationFillMode: 'forwards', marginRight: '-8px' }}
+            className="text-pumple-text"
+            style={{ animationName: 'slideInLeft', animationDuration: '0.4s', animationFillMode: 'forwards', marginRight: '-13px' }}
           >
-            ⚔
+            <Sword size={22} />
           </div>
           {/* Sparkle */}
           <div
-            className="text-pumple-primary text-lg"
+            className="text-pumple-primary relative z-10"
             style={{ animationName: 'sparkle', animationDuration: '0.3s', animationDelay: '0.4s', animationFillMode: 'forwards', opacity: 0 }}
           >
-            ✦
+            <Sparkles size={16} />
           </div>
-          {/* Right sword */}
+          {/* Right sword — mirrored to cross the left one */}
           <div
-            className="text-2xl"
-            style={{ transform: 'scaleX(-1)', animationName: 'slideInRight', animationDuration: '0.4s', animationFillMode: 'forwards', marginLeft: '-8px' }}
+            className="text-pumple-text"
+            style={{ transform: 'scaleX(-1)', animationName: 'slideInRight', animationDuration: '0.4s', animationFillMode: 'forwards', marginLeft: '-13px' }}
           >
-            ⚔
+            <Sword size={22} />
           </div>
         </div>
 
@@ -165,9 +172,11 @@ export default function BattleCard({ battle }: { battle: Battle }) {
 
           {/* VS divider */}
           <div className="flex flex-col items-center gap-1 px-2 self-center">
-            <div className="h-8 w-px bg-pumple-border" />
-            <span className="text-[10px] font-black text-pumple-muted bg-pumple-elevated px-1.5 py-0.5 rounded">VS</span>
-            <div className="h-8 w-px bg-pumple-border" />
+            <div className="h-8 w-px bg-gradient-to-b from-transparent to-pumple-primary/40" />
+            <span className="font-display text-[10px] font-bold text-pumple-primary bg-pumple-primary/10 border border-pumple-primary/30 px-1.5 py-0.5 rounded">
+              VS
+            </span>
+            <div className="h-8 w-px bg-gradient-to-t from-transparent to-pumple-primary/40" />
           </div>
 
           {isOpen ? (
@@ -177,7 +186,7 @@ export default function BattleCard({ battle }: { battle: Battle }) {
                 ?
               </div>
               <p className="text-[10px] text-pumple-muted">Waiting for opponent...</p>
-              <button className="bg-pumple-primary text-black text-[11px] font-bold px-3 py-1 rounded-md hover:bg-pumple-primary/90 transition-colors">
+              <button className="btn-degen text-[11px] px-3 py-1">
                 Join Battle
               </button>
             </div>
@@ -201,7 +210,8 @@ export default function BattleCard({ battle }: { battle: Battle }) {
               {battle.watchers.toLocaleString()}
             </span>
           </div>
-          <button className="bg-pumple-elevated border border-pumple-border text-[11px] font-bold px-3 py-1 rounded-md text-pumple-muted hover:border-pumple-primary hover:text-pumple-primary transition-colors">
+          <button className="btn-ghost text-[11px] px-3 py-1">
+            <Eye size={11} />
             Watch
           </button>
         </div>

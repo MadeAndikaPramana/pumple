@@ -103,7 +103,7 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
           className="flex justify-between items-center p-4"
           style={{ borderBottom: '1px solid #1E2235' }}
         >
-          <span className="text-sm font-bold text-pumple-text">Post a signal</span>
+          <span className="font-display text-sm font-bold text-pumple-text">Post a signal</span>
           <button
             onClick={onClose}
             className="w-7 h-7 flex items-center justify-center rounded-md text-pumple-muted hover:text-pumple-text hover:bg-pumple-elevated transition-colors"
@@ -332,16 +332,10 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
             <span className="text-[11px] text-pumple-muted">Posting as @CryptoSniper_X</span>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              onClick={onClose}
-              className="text-[11px] font-bold px-3 py-2 rounded-[8px] transition-colors text-pumple-muted"
-              style={{ border: '1px solid #1E2235', backgroundColor: '#181B24' }}
-            >
+            <button onClick={onClose} className="btn-ghost text-[11px] px-3 py-2">
               Cancel
             </button>
-            <button
-              className="bg-pumple-primary text-black font-bold px-6 py-2 rounded-[8px] text-sm hover:bg-pumple-primary/90 transition-colors"
-            >
+            <button className="btn-degen text-sm px-6 py-2">
               Post Signal
             </button>
           </div>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Shield, Target, Coins, Crown, TrendingUp, Lock, Users } from 'lucide-react'
+import { Plus, Shield, Target, Coins, Crown, TrendingUp, Lock, Users, Flame, Sparkles, type LucideIcon } from 'lucide-react'
 import { TIERS, type TierKey } from '@/types'
 import TierBadge from '@/components/ui/TierBadge'
 import { TRIBES } from '@/lib/mock-data'
@@ -15,11 +15,11 @@ const TIER_ICONS: Record<TierKey, React.ReactNode> = {
   legend:     <Crown size={18} />,
 }
 
-const FILTERS = [
+const FILTERS: { id: string; label: string; icon?: LucideIcon }[] = [
   { id: 'all',    label: 'All Tribes' },
-  { id: 'active', label: '🔥 Most Active' },
-  { id: 'new',    label: '🆕 New' },
-  { id: 'top',    label: '👑 Top Accuracy' },
+  { id: 'active', label: 'Most Active',  icon: Flame },
+  { id: 'new',    label: 'New',          icon: Sparkles },
+  { id: 'top',    label: 'Top Accuracy', icon: Crown },
 ]
 
 export default function TribesPage() {
@@ -37,26 +37,26 @@ export default function TribesPage() {
       <div className="flex-1 min-w-0">
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
-        <h1 className="text-sm font-bold text-pumple-text">Tribes</h1>
-        <button className="flex items-center gap-1.5 bg-pumple-primary text-black text-[11px] font-bold rounded-[6px] px-3 py-1.5 hover:bg-pumple-primary/90 transition-colors">
-          <Plus size={12} />
+        <h1 className="flex items-center gap-2 font-display text-base font-bold text-pumple-text">
+          <Shield size={16} className="text-pumple-primary" />
+          Tribes
+        </h1>
+        <button className="btn-degen text-[11px] px-3.5 py-1.5">
+          <Plus size={12} strokeWidth={3} />
           Create Tribe
         </button>
       </div>
 
       {/* Filter pills */}
       <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
-        {FILTERS.map(f => (
+        {FILTERS.map(({ id, label, icon: Icon }) => (
           <button
-            key={f.id}
-            onClick={() => setFilter(f.id)}
-            className={`text-[11px] font-semibold px-3 py-1.5 rounded-full whitespace-nowrap cursor-pointer flex-shrink-0 transition-colors ${
-              filter === f.id
-                ? 'bg-pumple-primary text-black'
-                : 'bg-pumple-elevated text-pumple-muted border border-pumple-border hover:text-pumple-text'
-            }`}
+            key={id}
+            onClick={() => setFilter(id)}
+            className={`pill text-[11px] px-3 py-1.5 ${filter === id ? 'pill--active' : ''}`}
           >
-            {f.label}
+            {Icon && <Icon size={11} />}
+            {label}
           </button>
         ))}
       </div>
@@ -69,13 +69,13 @@ export default function TribesPage() {
           return (
             <div
               key={tribe.name}
-              className="bg-pumple-card rounded-[10px] p-3.5 relative overflow-hidden"
+              className="bg-pumple-card rounded-[12px] p-3.5 relative overflow-hidden p-card-hover"
               style={{ border: `1px solid ${tierColor}40` }}
             >
               {/* Top stripe */}
               <div
-                className="absolute top-0 left-0 right-0 h-[2px]"
-                style={{ backgroundColor: tierColor }}
+                className="absolute top-0 left-0 right-0 h-[2.5px]"
+                style={{ background: `linear-gradient(90deg, transparent, ${tierColor}, transparent)` }}
               />
 
               {/* Header */}
@@ -157,8 +157,8 @@ export default function TribesPage() {
 
       {/* Right sidebar — Top Tribes */}
       <div className="w-[300px] flex-shrink-0 hidden lg:flex flex-col gap-4 sticky top-4 self-start">
-        <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4">
-          <p className="text-sm font-bold text-pumple-text mb-3">Top tribes</p>
+        <div className="p-card p-4">
+          <p className="font-display text-sm font-bold text-pumple-text mb-3">Top tribes</p>
           {topTribes.map((tribe, i) => {
             const tierColor = TIERS[tribe.tier].color
             return (

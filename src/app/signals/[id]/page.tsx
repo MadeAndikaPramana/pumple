@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Shield, Target, MessageSquare, ThumbsUp, CheckCircle, ArrowRight } from 'lucide-react'
+import { ArrowLeft, Shield, Target, MessageSquare, ThumbsUp, CheckCircle, ArrowRight, TrendingUp, TrendingDown } from 'lucide-react'
 import { SIGNALS, SIGNAL_REPLIES, CALLED_IT_USERS } from '@/lib/mock-data'
 import { RARITY_COLORS, TIERS } from '@/types'
 import TierBadge from '@/components/ui/TierBadge'
@@ -100,12 +100,13 @@ export default function SignalDetailPage() {
           <div className="flex justify-between items-center flex-wrap gap-2">
             <div className="flex items-center gap-2 flex-wrap">
               <span
-                className="text-[11px] font-bold px-2 py-0.5 rounded-[4px]"
-                style={{ backgroundColor: `${directionColor}20`, color: directionColor, border: `1px solid ${directionColor}40` }}
+                className="flex items-center gap-1 text-[11px] font-black px-2 py-0.5 rounded-md"
+                style={{ backgroundColor: `${directionColor}1c`, color: directionColor, border: `1px solid ${directionColor}45` }}
               >
+                {signal.direction === 'LONG' ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
                 {signal.direction}
               </span>
-              <span className="text-lg font-bold text-pumple-text">{signal.coin}</span>
+              <span className="font-display text-lg font-bold text-pumple-text">{signal.coin}</span>
               <span className="text-[10px] text-pumple-muted bg-pumple-elevated px-1.5 py-0.5 rounded-full">
                 {signal.timeframe}
               </span>
@@ -126,15 +127,15 @@ export default function SignalDetailPage() {
         </div>
 
         {/* 2. Status tracker */}
-        <div className="bg-pumple-elevated rounded-[10px] p-3 my-3 flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse flex-shrink-0" />
+        <div className="bg-pumple-elevated border border-pumple-border rounded-[10px] p-3 my-3 flex items-center gap-3">
+          <span className="live-dot live-dot--gold" aria-hidden />
           <span className="font-bold text-sm text-pumple-text">Active</span>
           <span className="text-pumple-muted text-xs">· Posted {signal.timeAgo}</span>
 
           {/* Live indicator — TradingView streams live data natively */}
-          <span className="flex items-center gap-1 ml-auto">
-            <span className="w-1.5 h-1.5 rounded-full bg-pumple-primary animate-pulse" />
-            <span className="text-[10px] font-bold text-pumple-primary tracking-wide">LIVE</span>
+          <span className="flex items-center gap-1.5 ml-auto">
+            <span className="live-dot" aria-hidden />
+            <span className="text-[10px] font-black text-pumple-primary tracking-[0.18em]">LIVE</span>
           </span>
         </div>
 
@@ -143,7 +144,7 @@ export default function SignalDetailPage() {
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-1">
-                <span className="text-2xl font-black font-mono text-pumple-text">
+                <span className="text-2xl font-black font-mono tnum text-pumple-text">
                   {livePrice
                     ? `$${livePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                     : `${signal.entry}`}
@@ -154,8 +155,8 @@ export default function SignalDetailPage() {
                   </span>
                 )}
                 {livePrice && (
-                  <span className="flex items-center gap-1 text-[10px] text-pumple-muted">
-                    <span className="w-1.5 h-1.5 rounded-full bg-pumple-primary animate-pulse inline-block" />
+                  <span className="flex items-center gap-1.5 text-[10px] font-bold text-pumple-muted">
+                    <span className="live-dot" aria-hidden />
                     LIVE
                   </span>
                 )}
@@ -180,11 +181,7 @@ export default function SignalDetailPage() {
                   <button
                     key={tf}
                     onClick={() => setActiveTf(tf)}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${
-                      activeTf === tf
-                        ? 'bg-pumple-primary text-black'
-                        : 'bg-pumple-elevated text-pumple-muted hover:text-pumple-text border border-pumple-border'
-                    }`}
+                    className={`pill !rounded-md text-[11px] font-bold px-2.5 py-1 ${activeTf === tf ? 'pill--active' : ''}`}
                   >
                     {tf}
                   </button>
@@ -256,17 +253,17 @@ export default function SignalDetailPage() {
 
         {/* 7. Engagement bar */}
         <div className="flex items-center gap-3 my-3 flex-wrap">
-          <button className="flex items-center gap-2 text-sm text-pumple-muted bg-pumple-elevated border border-pumple-border rounded-[8px] px-4 py-2 hover:text-pumple-text transition-colors">
+          <button className="btn-ghost text-sm px-4 py-2">
             <ThumbsUp size={14} />
-            {signal.likes}
+            <span className="tnum">{signal.likes}</span>
           </button>
-          <button className="flex items-center gap-2 text-sm text-pumple-muted bg-pumple-elevated border border-pumple-border rounded-[8px] px-4 py-2 hover:text-pumple-text transition-colors">
+          <button className="btn-ghost text-sm px-4 py-2">
             <CheckCircle size={14} />
-            Called it {signal.calledIt}
+            Called it <span className="tnum">{signal.calledIt}</span>
           </button>
-          <button className="flex items-center gap-2 text-sm text-pumple-muted bg-pumple-elevated border border-pumple-border rounded-[8px] px-4 py-2 hover:text-pumple-text transition-colors">
+          <button className="btn-ghost text-sm px-4 py-2">
             <MessageSquare size={14} />
-            {SIGNAL_REPLIES.length} replies
+            <span className="tnum">{SIGNAL_REPLIES.length}</span> replies
           </button>
         </div>
 
@@ -313,7 +310,7 @@ export default function SignalDetailPage() {
                 className="flex-1 bg-pumple-elevated border border-pumple-border rounded-[8px] px-3 py-2 text-sm text-pumple-text placeholder:text-pumple-muted/50 outline-none focus:border-pumple-primary/50 resize-none transition-colors"
                 rows={2}
               />
-              <button className="bg-pumple-primary text-black text-xs font-bold px-3 py-2 rounded-[8px] hover:bg-pumple-primary/90 transition-colors whitespace-nowrap">
+              <button className="btn-degen text-xs px-3.5 py-2 whitespace-nowrap">
                 Post
               </button>
             </div>

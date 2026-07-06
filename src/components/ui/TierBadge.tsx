@@ -14,11 +14,12 @@ export default function TierBadge({ tier, size = 'sm' }: TierBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-[3px] font-bold uppercase tracking-wide ${sizeClass}`}
+      className={`inline-flex items-center gap-1 rounded font-bold uppercase tracking-wide ${sizeClass}`}
       style={{
-        backgroundColor: `${color}20`,
+        backgroundColor: `${color}1c`,
         color,
         border: `1px solid ${color}40`,
+        textShadow: tier === 'legend' ? `0 0 8px ${color}80` : undefined,
       }}
     >
       {label}

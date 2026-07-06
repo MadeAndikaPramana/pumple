@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
   CheckCircle, ShieldCheck, TrendingUp, Swords, Shield, Crown, Target,
-  Coins,
+  Coins, Zap, Trophy,
 } from 'lucide-react'
 import { TIERS, RARITY_COLORS, type TierKey, type Rarity } from '@/types'
 import TierBadge from '@/components/ui/TierBadge'
@@ -107,9 +107,15 @@ export default function ProfilePage() {
       className="max-w-[900px] mx-auto"
     >
       {/* ── SECTION A: Header card ── */}
-      <div className="bg-pumple-card border border-pumple-border rounded-[16px] overflow-hidden mb-4">
+      <div className="p-card rounded-[16px] overflow-hidden mb-4">
         {/* Banner */}
-        <div className="h-24 bg-gradient-to-br from-[#1A1D27] via-[#2A1F3D] to-[#1A2D1F] relative">
+        <div
+          className="h-24 relative"
+          style={{
+            background:
+              'radial-gradient(ellipse 60% 120% at 15% 100%, rgba(74,222,128,0.18), transparent), radial-gradient(ellipse 50% 120% at 85% 0%, rgba(167,139,250,0.16), transparent), linear-gradient(135deg, #14161e, #1A1D27)',
+          }}
+        >
           <div className="absolute top-3 right-3 bg-black/40 text-[10px] font-bold px-2 py-1 rounded-full">
             <span className="text-pumple-muted">Degen Score </span>
             <span style={{ color: degenColor }}>{PROFILE.degenScore}/100</span>
@@ -138,7 +144,7 @@ export default function ProfilePage() {
           <div className="flex items-start justify-between mt-2 gap-3">
             <div className="min-w-0">
               <div className="flex items-baseline gap-2 flex-wrap">
-                <span className="text-lg font-black text-pumple-text">{PROFILE.displayName}</span>
+                <span className="font-display text-lg font-bold text-pumple-text">{PROFILE.displayName}</span>
                 <span className="text-sm text-pumple-muted">@{PROFILE.username}</span>
               </div>
               <div className="flex gap-2 items-center mt-1">
@@ -152,10 +158,10 @@ export default function ProfilePage() {
             </div>
 
             <div className="flex flex-col items-end gap-2 flex-shrink-0">
-              <button className="bg-pumple-primary text-black font-bold text-sm px-5 py-2 rounded-[8px] hover:bg-pumple-primary/90 transition-colors">
+              <button className="btn-degen text-sm px-5 py-2">
                 Follow
               </button>
-              <button className="bg-pumple-elevated border border-pumple-border text-pumple-muted text-sm px-4 py-2 rounded-[8px] hover:text-pumple-text transition-colors">
+              <button className="btn-ghost text-sm px-4 py-2">
                 Share
               </button>
             </div>
@@ -169,10 +175,11 @@ export default function ProfilePage() {
               { label: 'Streak', value: `${PROFILE.winStreak} days`, color: PROFILE.winStreak >= 5 ? '#FBBF24' : undefined },
               { label: 'Battles', value: `${PROFILE.battleRecord.won}W ${PROFILE.battleRecord.lost}L`, color: undefined },
               { label: 'Followers', value: PROFILE.followers.toLocaleString(), color: undefined },
-              { label: '$PUMP', value: `⚡ ${PROFILE.pumpEarned}`, color: '#A3E635' },
+              { label: '$PUMP', value: PROFILE.pumpEarned, color: '#A3E635' },
             ].map(stat => (
               <div key={stat.label}>
-                <p className="text-sm font-black" style={{ color: stat.color ?? undefined }}>
+                <p className="flex items-center gap-1 text-sm font-black tnum" style={{ color: stat.color ?? undefined }}>
+                  {stat.label === '$PUMP' && <Zap size={12} fill="currentColor" />}
                   {stat.value}
                 </p>
                 <p className="text-[10px] text-pumple-muted uppercase tracking-wide">{stat.label}</p>
@@ -302,7 +309,10 @@ export default function ProfilePage() {
 
             {/* Best call */}
             <div className="bg-pumple-elevated rounded-[10px] p-3">
-              <p className="text-[11px] font-bold text-pumple-muted mb-2">Best Call Ever 🏆</p>
+              <p className="flex items-center gap-1.5 text-[11px] font-bold text-pumple-muted mb-2">
+                <Trophy size={11} className="text-pumple-gold" />
+                Best Call Ever
+              </p>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-black text-pumple-text">{PROFILE.bestCallCoin}</span>
                 <DirectionBadge direction="LONG" />
@@ -325,7 +335,10 @@ export default function ProfilePage() {
                     ) : s.status === 'lost' ? (
                       <span className="text-[11px] font-bold text-pumple-red">{s.result} ✗</span>
                     ) : (
-                      <span className="text-[11px] text-pumple-gold">⏳ Active</span>
+                      <span className="flex items-center gap-1.5 text-[11px] text-pumple-gold">
+                        <span className="live-dot live-dot--gold" aria-hidden />
+                        Active
+                      </span>
                     )}
                   </div>
                 ))}
@@ -384,9 +397,9 @@ export default function ProfilePage() {
                         <p className="text-sm font-bold text-pumple-red">{signal.result} ✗</p>
                       </div>
                     ) : (
-                      <span className="flex items-center gap-1 text-[11px] text-pumple-gold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-pumple-gold animate-pulse" />
-                        ⏳ Active
+                      <span className="flex items-center gap-1.5 text-[11px] text-pumple-gold">
+                        <span className="live-dot live-dot--gold" aria-hidden />
+                        Active
                       </span>
                     )}
                     <span className="hidden lg:flex items-center gap-1 text-[9px] text-pumple-muted/50">
@@ -500,7 +513,7 @@ export default function ProfilePage() {
                     <p className="text-[11px] text-pumple-muted">{f.followers.toLocaleString()} followers</p>
                   </div>
                 </div>
-                <button className="bg-pumple-primary text-black font-bold text-sm px-5 py-2 rounded-[8px] hover:bg-pumple-primary/90 transition-colors flex-shrink-0">
+                <button className="btn-degen text-sm px-5 py-2 flex-shrink-0">
                   Follow
                 </button>
               </div>

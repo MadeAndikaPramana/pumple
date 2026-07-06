@@ -7,19 +7,41 @@ interface TradingViewChartProps {
   height?: number
 }
 
+// tv.js must only be loaded once per page — re-appending it for every widget
+// (or timeframe change) makes stale onload callbacks fire against containers
+// React has already torn down, crashing inside TradingView with a null
+// parentNode. Share one load promise across all instances instead.
+let tvScriptPromise: Promise<void> | null = null
+
+function loadTvScript(): Promise<void> {
+  if ((window as any).TradingView) return Promise.resolve()
+  if (!tvScriptPromise) {
+    tvScriptPromise = new Promise(resolve => {
+      const script = document.createElement('script')
+      script.src = 'https://s3.tradingview.com/tv.js'
+      script.async = true
+      script.onload = () => resolve()
+      document.head.appendChild(script)
+    })
+  }
+  return tvScriptPromise
+}
+
 export default function TradingViewChart({ symbol, interval, height = 500 }: TradingViewChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!containerRef.current) return
-    const containerId = `tv_${Math.random().toString(36).slice(2)}`
-    containerRef.current.innerHTML = `<div id="${containerId}" style="height:${height}px"></div>`
+    const container = containerRef.current
+    if (!container) return
 
-    const script = document.createElement('script')
-    script.src = 'https://s3.tradingview.com/tv.js'
-    script.async = true
-    script.onload = () => {
+    let cancelled = false
+    const containerId = `tv_${Math.random().toString(36).slice(2)}`
+    container.innerHTML = `<div id="${containerId}" style="height:${height}px"></div>`
+
+    loadTvScript().then(() => {
+      if (cancelled) return
       if (typeof (window as any).TradingView === 'undefined') return
+      if (!document.getElementById(containerId)) return
       new (window as any).TradingView.widget({
         container_id: containerId,
         autosize: true,
@@ -39,11 +61,11 @@ export default function TradingViewChart({ symbol, interval, height = 500 }: Tra
         save_image: false,
         withdateranges: false,
       })
-    }
-    containerRef.current.appendChild(script)
+    })
 
     return () => {
-      if (containerRef.current) containerRef.current.innerHTML = ''
+      cancelled = true
+      container.innerHTML = ''
     }
   }, [symbol, interval, height])
 

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Trophy, Wallet, Box } from 'lucide-react'
+import { Trophy, Wallet, Box, Crown } from 'lucide-react'
 import { TIERS } from '@/types'
 import TierBadge from '@/components/ui/TierBadge'
 import { LEADERBOARD } from '@/lib/mock-data'
@@ -45,17 +45,25 @@ function TopCard({ entry }: { entry: Entry }) {
 
   return (
     <div
-      className={`bg-pumple-card border rounded-[16px] p-5 relative overflow-hidden ${
-        isFirst ? 'border-pumple-primary/40 self-start -mt-2' : 'border-pumple-border'
+      className={`bg-pumple-card border rounded-[16px] p-5 relative overflow-hidden p-card-hover ${
+        isFirst ? 'border-pumple-gold/40 self-start -mt-2' : 'border-pumple-border'
       }`}
-      style={isFirst ? { boxShadow: '0 0 20px rgba(74,222,128,0.08)' } : undefined}
+      style={isFirst ? { animation: 'gold-pulse 3s ease-in-out infinite' } : undefined}
     >
+      {/* Champion glow wash */}
+      {isFirst && (
+        <div
+          className="absolute inset-x-0 top-0 h-20 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse 70% 100% at 50% 0%, rgba(251,191,36,0.12), transparent)' }}
+        />
+      )}
+
       {/* Rank badge */}
       <div
         className="absolute top-3 left-3 text-[11px] font-black px-2 py-0.5 rounded-full flex items-center gap-1"
         style={rankBadgeStyle(entry.rank)}
       >
-        <Trophy size={10} />
+        {isFirst ? <Crown size={10} /> : <Trophy size={10} />}
         {entry.rank}
       </div>
 
@@ -66,10 +74,22 @@ function TopCard({ entry }: { entry: Entry }) {
 
       {/* User info */}
       <div className="flex items-center gap-3 mt-6 mb-4">
-        <Link href={`/profile/${entry.user}`} className="flex-shrink-0">
+        <Link href={`/profile/${entry.user}`} className="flex-shrink-0 relative">
+          {isFirst && (
+            <Crown
+              size={18}
+              className="absolute -top-3 left-1/2 -translate-x-1/2 text-pumple-gold z-10"
+              style={{ animation: 'float-bob 3s ease-in-out infinite', filter: 'drop-shadow(0 0 6px rgba(251,191,36,0.7))' }}
+            />
+          )}
           <div
             className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-black"
-            style={{ backgroundColor: `${tierColor}20`, border: `2px solid ${tierColor}`, color: tierColor }}
+            style={{
+              backgroundColor: `${tierColor}20`,
+              border: `2px solid ${tierColor}`,
+              color: tierColor,
+              boxShadow: isFirst ? `0 0 18px ${tierColor}50` : undefined,
+            }}
           >
             {initials(entry.user)}
           </div>
@@ -90,13 +110,13 @@ function TopCard({ entry }: { entry: Entry }) {
 
       {/* Main metrics */}
       <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-pumple-elevated rounded-[10px] p-3">
+        <div className="bg-pumple-elevated border border-pumple-border rounded-[10px] p-3">
           <p className="text-[9px] font-bold text-pumple-muted tracking-widest">AVG ACCURACY</p>
-          <p className="text-2xl font-black text-pumple-primary">{entry.accuracy}</p>
+          <p className={`font-display text-2xl font-bold tnum text-pumple-primary ${isFirst ? 'text-glow-lime' : ''}`}>{entry.accuracy}</p>
         </div>
-        <div className="bg-pumple-elevated rounded-[10px] p-3">
+        <div className="bg-pumple-elevated border border-pumple-border rounded-[10px] p-3">
           <p className="text-[9px] font-bold text-pumple-muted tracking-widest">WIN RATE</p>
-          <p className="text-2xl font-black text-pumple-accent">{entry.winRate}</p>
+          <p className="font-display text-2xl font-bold tnum text-pumple-accent">{entry.winRate}</p>
         </div>
       </div>
 
@@ -115,8 +135,8 @@ function TopCard({ entry }: { entry: Entry }) {
       </div>
 
       {/* Updated indicator */}
-      <div className="flex items-center gap-1 text-[10px] text-pumple-muted mb-3">
-        <span className="w-1.5 h-1.5 rounded-full bg-pumple-primary animate-pulse" />
+      <div className="flex items-center gap-1.5 text-[10px] text-pumple-muted mb-3">
+        <span className="live-dot" aria-hidden />
         Updated just now
       </div>
 
@@ -147,7 +167,10 @@ export default function LeaderboardPage() {
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h1 className="text-2xl font-black text-pumple-text">Callout leaderboard</h1>
+          <h1 className="flex items-center gap-2 font-display text-2xl font-bold text-pumple-text">
+            <Trophy size={22} className="text-pumple-gold" style={{ filter: 'drop-shadow(0 0 8px rgba(251,191,36,0.5))' }} />
+            Callout leaderboard
+          </h1>
           <p className="text-sm text-pumple-muted mt-1">Top traders ranked by verified signal performance.</p>
         </div>
         <div className="flex gap-1.5 flex-shrink-0">
@@ -155,11 +178,7 @@ export default function LeaderboardPage() {
             <button
               key={f}
               onClick={() => setActiveFilter(f)}
-              className={`text-[11px] px-3 py-1.5 rounded-full transition-colors ${
-                activeFilter === f
-                  ? 'bg-pumple-primary text-black font-bold'
-                  : 'bg-pumple-elevated border border-pumple-border text-pumple-muted hover:text-pumple-text'
-              }`}
+              className={`pill text-[11px] px-3 py-1.5 ${activeFilter === f ? 'pill--active' : ''}`}
             >
               {f}
             </button>
@@ -179,7 +198,7 @@ export default function LeaderboardPage() {
       {runnersUp.map(entry => {
         const tierColor = TIERS[entry.tier].color
         return (
-          <div key={entry.rank} className="bg-pumple-card border border-pumple-border rounded-[12px] p-4 mb-3">
+          <div key={entry.rank} className="p-card p-card-hover p-4 mb-3">
             <div className="flex items-center gap-4">
               <span className="text-sm font-black text-pumple-muted w-6 flex-shrink-0">#{entry.rank}</span>
               <Link href={`/profile/${entry.user}`} className="flex-shrink-0">

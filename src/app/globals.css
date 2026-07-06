@@ -17,21 +17,45 @@
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-display: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #0A0B0F;
   color: #F1F5F9;
   font-family: var(--font-sans);
+  /* Ambient glow + faint grid — the pump.fun "terminal at 3am" feel */
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(74, 222, 128, 0.06), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 110%, rgba(163, 230, 53, 0.03), transparent),
+    linear-gradient(rgba(30, 34, 53, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 34, 53, 0.22) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(74, 222, 128, 0.35);
+  color: #F1F5F9;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(74, 222, 128, 0.7);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -40,9 +64,282 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: #1E2235;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #2A2D3E;
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────────────── */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(250%); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 18px rgba(74, 222, 128, 0.18), 0 0 2px rgba(74, 222, 128, 0.4); }
+  50%      { box-shadow: 0 0 32px rgba(74, 222, 128, 0.38), 0 0 4px rgba(74, 222, 128, 0.6); }
+}
+
+@keyframes gold-pulse {
+  0%, 100% { box-shadow: 0 0 18px rgba(251, 191, 36, 0.15), 0 0 2px rgba(251, 191, 36, 0.35); }
+  50%      { box-shadow: 0 0 34px rgba(251, 191, 36, 0.35), 0 0 5px rgba(251, 191, 36, 0.55); }
+}
+
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50%      { transform: translateY(-4px) rotate(6deg); }
+}
+
+@keyframes pop-in {
+  0%   { transform: scale(0.92); opacity: 0; }
+  70%  { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes ping-dot {
+  0%   { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+/* ── Marquee ticker ────────────────────────────────────────────────────── */
+
+.marquee-mask {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, black 4%, black 96%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 4%, black 96%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 45s linear infinite;
+}
+
+.marquee-mask:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ── Live dot (pulsing + ping ring) ────────────────────────────────────── */
+
+.live-dot {
+  position: relative;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #4ADE80;
+  flex-shrink: 0;
+}
+
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: #4ADE80;
+  animation: ping-dot 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.live-dot--red { background: #F43F5E; }
+.live-dot--red::after { background: #F43F5E; }
+.live-dot--gold { background: #FBBF24; }
+.live-dot--gold::after { background: #FBBF24; }
+
+/* ── Cards ─────────────────────────────────────────────────────────────── */
+
+.p-card {
+  background-color: #111318;
+  border: 1px solid #1E2235;
+  border-radius: 14px;
+}
+
+.p-card-hover {
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+
+.p-card-hover:hover {
+  border-color: rgba(74, 222, 128, 0.35);
+  box-shadow: 0 0 24px rgba(74, 222, 128, 0.08), 0 4px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+/* King-of-the-hill spotlight frame */
+.king-frame {
+  position: relative;
+  border-radius: 16px;
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.85), rgba(74, 222, 128, 0.5) 40%, rgba(251, 191, 36, 0.2) 70%, rgba(251, 191, 36, 0.85));
+  animation: gold-pulse 3s ease-in-out infinite;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+
+.btn-degen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #4ADE80;
+  color: #08090C;
+  font-weight: 800;
+  border-radius: 10px;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  box-shadow: 0 3px 0 rgba(34, 120, 68, 0.9), 0 0 18px rgba(74, 222, 128, 0.25);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, filter 120ms ease;
+}
+
+.btn-degen:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 3px 0 rgba(34, 120, 68, 0.9), 0 0 28px rgba(74, 222, 128, 0.45);
+}
+
+.btn-degen:active {
+  transform: translateY(2px) scale(0.99);
+  box-shadow: 0 1px 0 rgba(34, 120, 68, 0.9), 0 0 12px rgba(74, 222, 128, 0.3);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #181B24;
+  color: #64748B;
+  font-weight: 700;
+  border: 1px solid #1E2235;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.btn-ghost:hover {
+  color: #F1F5F9;
+  border-color: #2A2D3E;
+  background: #1C202B;
+}
+
+.btn-outline-lime {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(74, 222, 128, 0.08);
+  color: #4ADE80;
+  font-weight: 700;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 150ms ease, box-shadow 150ms ease;
+}
+
+.btn-outline-lime:hover {
+  background: rgba(74, 222, 128, 0.16);
+  box-shadow: 0 0 16px rgba(74, 222, 128, 0.18);
+}
+
+/* ── Pills / chips ─────────────────────────────────────────────────────── */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #181B24;
+  color: #64748B;
+  border: 1px solid #1E2235;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.pill:hover {
+  color: #F1F5F9;
+  border-color: #2A2D3E;
+}
+
+.pill--active {
+  background: #4ADE80;
+  color: #08090C;
+  font-weight: 800;
+  border-color: #4ADE80;
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.35);
+}
+
+.pill--active:hover {
+  color: #08090C;
+  border-color: #4ADE80;
+}
+
+/* ── Confidence / progress bars ────────────────────────────────────────── */
+
+.bar-track {
+  height: 5px;
+  background: #2A2D3E;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: shimmer 2.4s ease-in-out infinite;
+}
+
+/* ── Typography helpers ────────────────────────────────────────────────── */
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.text-glow-lime {
+  text-shadow: 0 0 18px rgba(74, 222, 128, 0.55);
+}
+
+.text-glow-gold {
+  text-shadow: 0 0 18px rgba(251, 191, 36, 0.55);
+}
+
+/* Tabular numbers for anything price-like */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Reduced motion ────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .live-dot::after,
+  .king-frame,
+  .bar-fill::after {
+    animation: none !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
 }

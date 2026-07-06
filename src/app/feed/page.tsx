@@ -70,7 +70,7 @@ function PostCard({ post }: { post: PostLike }) {
   const initials = post.user[0].toUpperCase()
 
   return (
-    <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4 mb-3 hover:border-pumple-dim transition-colors">
+    <div className="p-card p-card-hover p-4 mb-3">
       {/* Header */}
       <div className="flex items-start gap-3">
         <div
@@ -164,7 +164,7 @@ export default function FeedPage() {
       <div className="flex-1 min-w-0">
 
         {/* Compose box */}
-        <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4 mb-4">
+        <div className="p-card p-4 mb-4">
           <div className="flex gap-3 mb-3">
             <div
               className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
@@ -196,7 +196,7 @@ export default function FeedPage() {
                 </button>
               ))}
             </div>
-            <button className="bg-pumple-primary text-black text-xs font-bold px-4 py-1.5 rounded-md hover:bg-pumple-primary/90 transition-colors">
+            <button className="btn-degen text-xs px-4 py-1.5">
               Post
             </button>
           </div>
@@ -222,12 +222,12 @@ export default function FeedPage() {
         {isCommunity ? (
           <>
             {/* Community header */}
-            <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4 mb-4">
+            <div className="p-card p-4 mb-4">
               <div className="flex items-center gap-2">
                 <Globe size={18} className="text-pumple-primary" />
-                <span className="text-base font-black text-pumple-text">Coin communities</span>
-                <span className="w-2 h-2 rounded-full bg-pumple-primary animate-pulse ml-2" />
-                <span className="text-[10px] font-bold text-pumple-primary">LIVE</span>
+                <span className="font-display text-base font-bold text-pumple-text">Coin communities</span>
+                <span className="live-dot ml-2" aria-hidden />
+                <span className="text-[10px] font-black text-pumple-primary tracking-[0.18em]">LIVE</span>
               </div>
               <p className="text-xs text-pumple-muted mt-1">Latest posts from every coin community, in one timeline.</p>
             </div>
@@ -236,11 +236,7 @@ export default function FeedPage() {
             <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
               <button
                 onClick={() => setCommunityCoin(null)}
-                className={`text-[11px] font-semibold px-3 py-1.5 rounded-full cursor-pointer whitespace-nowrap flex-shrink-0 transition-colors ${
-                  communityCoin === null
-                    ? 'bg-pumple-primary text-black font-bold'
-                    : 'bg-pumple-elevated text-pumple-muted border border-pumple-border'
-                }`}
+                className={`pill text-[11px] px-3 py-1.5 ${communityCoin === null ? 'pill--active' : ''}`}
               >
                 All
               </button>
@@ -248,11 +244,7 @@ export default function FeedPage() {
                 <button
                   key={coin}
                   onClick={() => setCommunityCoin(coin === communityCoin ? null : coin)}
-                  className={`text-[11px] font-semibold px-3 py-1.5 rounded-full cursor-pointer whitespace-nowrap flex-shrink-0 transition-colors ${
-                    communityCoin === coin
-                      ? 'bg-pumple-primary text-black font-bold'
-                      : 'bg-pumple-elevated text-pumple-muted border border-pumple-border'
-                  }`}
+                  className={`pill text-[11px] px-3 py-1.5 ${communityCoin === coin ? 'pill--active' : ''}`}
                 >
                   {coin}
                 </button>
@@ -270,11 +262,7 @@ export default function FeedPage() {
                 <button
                   key={coin}
                   onClick={() => setSelectedCoin(coin)}
-                  className={`text-[11px] font-semibold px-3 py-1.5 rounded-full whitespace-nowrap cursor-pointer flex-shrink-0 transition-colors ${
-                    selectedCoin === coin
-                      ? 'bg-pumple-primary text-black'
-                      : 'bg-pumple-elevated text-pumple-muted border border-pumple-border hover:text-pumple-text'
-                  }`}
+                  className={`pill text-[11px] px-3 py-1.5 ${selectedCoin === coin ? 'pill--active' : ''}`}
                 >
                   {coin}
                 </button>
@@ -292,7 +280,7 @@ export default function FeedPage() {
 
         {isCommunity ? (
           /* Top communities */
-          <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4">
+          <div className="p-card p-4">
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-bold text-pumple-text">Top communities</p>
               <span className="text-[11px] text-pumple-muted">50+ posts</span>
@@ -318,7 +306,7 @@ export default function FeedPage() {
         ) : (
           <>
             {/* Trending coins */}
-            <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4">
+            <div className="p-card p-4">
               <p className="text-sm font-bold text-pumple-text mb-3">Trending</p>
               {TRENDING_COINS.map((item, i) => (
                 <div
@@ -344,7 +332,7 @@ export default function FeedPage() {
             </div>
 
             {/* Who to follow */}
-            <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4">
+            <div className="p-card p-4">
               <p className="text-sm font-bold text-pumple-text mb-3">Who to follow</p>
               {whoToFollow.map((entry, i) => {
                 const tierColor = TIERS[entry.tier].color
@@ -375,10 +363,10 @@ export default function FeedPage() {
             </div>
 
             {/* Live battles */}
-            <div className="bg-pumple-card border border-pumple-border rounded-[12px] p-4">
+            <div className="p-card p-4">
               <div className="flex justify-between items-center mb-3">
                 <p className="text-sm font-bold text-pumple-text">Live battles</p>
-                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                <span className="live-dot" aria-hidden />
               </div>
               {liveBattles.map((battle, i) => (
                 <div
