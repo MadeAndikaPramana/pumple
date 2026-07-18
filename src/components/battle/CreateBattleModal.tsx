@@ -11,10 +11,10 @@ interface CreateBattleModalProps {
 }
 
 const MODES: { id: BattleMode; icon: LucideIcon; color: string; name: string; desc: string }[] = [
-  { id: 'classic_1v1', icon: Swords, color: '#4ADE80', name: 'Classic 1v1', desc: 'Head-to-head, 24H max' },
-  { id: 'tournament',  icon: Trophy, color: '#FBBF24', name: 'Tournament',  desc: '8-16 player bracket' },
-  { id: 'mock',        icon: Drama,  color: '#A78BFA', name: 'Mock',        desc: 'Practice, no stake' },
-  { id: 'tribe_war',   icon: Shield, color: '#38BDF8', name: 'Tribe War',   desc: 'Tribe vs Tribe' },
+  { id: 'classic_1v1', icon: Swords, color: '#1FD978', name: 'Classic 1v1', desc: 'Head-to-head, 24H max' },
+  { id: 'tournament',  icon: Trophy, color: '#FACC15', name: 'Tournament',  desc: '8-16 player bracket' },
+  { id: 'mock',        icon: Drama,  color: '#C084FC', name: 'Mock',        desc: 'Practice, no stake' },
+  { id: 'tribe_war',   icon: Shield, color: '#60A5FA', name: 'Tribe War',   desc: 'Tribe vs Tribe' },
 ]
 
 const QUICK_COINS = ['$BTC', '$ETH', '$SOL', '$AVAX', '$BNB']
@@ -36,8 +36,8 @@ function DurationGroup({ options, value, onChange }: { options: string[]; value:
           onClick={() => onChange(opt)}
           className="text-[11px] font-bold px-3 py-1.5 rounded-[6px] transition-colors"
           style={value === opt
-            ? { backgroundColor: '#4ADE8020', color: '#4ADE80', border: '1px solid #4ADE8040' }
-            : { backgroundColor: '#181B24', color: '#64748B', border: '1px solid #1E2235' }
+            ? { backgroundColor: '#1FD97820', color: '#1FD978', border: '1px solid #1FD97840' }
+            : { backgroundColor: '#212225', color: '#A1A1AA', border: '1px solid #272A2D' }
           }
         >
           {opt}
@@ -79,10 +79,10 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
     >
       <div
         className="w-full overflow-y-auto"
-        style={{ maxWidth: '520px', maxHeight: '90vh', backgroundColor: '#111318', border: '1px solid #1E2235', borderRadius: '16px' }}
+        style={{ maxWidth: '520px', maxHeight: '90vh', backgroundColor: '#18191B', border: '1px solid #272A2D', borderRadius: '16px' }}
       >
         {/* Header */}
-        <div className="flex justify-between items-center p-4" style={{ borderBottom: '1px solid #1E2235' }}>
+        <div className="flex justify-between items-center p-4" style={{ borderBottom: '1px solid #272A2D' }}>
           <span className="font-display text-sm font-bold text-pumple-text">Create a battle</span>
           <button
             onClick={onClose}
@@ -104,7 +104,7 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
                   onClick={() => setMode(m.id)}
                   className={`rounded-[10px] p-3 cursor-pointer text-center transition-all ${
                     active
-                      ? 'border border-pumple-primary bg-pumple-primary/10 shadow-[0_0_16px_rgba(74,222,128,0.15)]'
+                      ? 'border border-pumple-primary bg-pumple-primary/10 shadow-[0_0_16px_rgba(31, 217, 120,0.15)]'
                       : 'border border-pumple-border bg-pumple-elevated hover:border-pumple-dim'
                   }`}
                 >
@@ -133,8 +133,8 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
                       onClick={() => setCoin(c)}
                       className="text-[11px] font-semibold px-2.5 py-1 rounded-[5px] transition-colors"
                       style={coin === c
-                        ? { backgroundColor: '#4ADE8020', color: '#4ADE80', border: '1px solid #4ADE8040' }
-                        : { backgroundColor: '#181B24', color: '#64748B', border: '1px solid #1E2235' }
+                        ? { backgroundColor: '#1FD97820', color: '#1FD978', border: '1px solid #1FD97840' }
+                        : { backgroundColor: '#212225', color: '#A1A1AA', border: '1px solid #272A2D' }
                       }
                     >
                       {c}
@@ -174,8 +174,8 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
                       onClick={() => setIsPublic(opt.v)}
                       className="text-[11px] font-bold px-3 py-1.5 rounded-[6px] transition-colors"
                       style={isPublic === opt.v
-                        ? { backgroundColor: '#4ADE8020', color: '#4ADE80', border: '1px solid #4ADE8040' }
-                        : { backgroundColor: '#181B24', color: '#64748B', border: '1px solid #1E2235' }
+                        ? { backgroundColor: '#1FD97820', color: '#1FD978', border: '1px solid #1FD97840' }
+                        : { backgroundColor: '#212225', color: '#A1A1AA', border: '1px solid #272A2D' }
                       }
                     >
                       {opt.label}
@@ -201,8 +201,8 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
                       onClick={() => setMaxPlayers(n)}
                       className="text-[11px] font-bold px-3 py-1.5 rounded-[6px] transition-colors"
                       style={maxPlayers === n
-                        ? { backgroundColor: '#4ADE8020', color: '#4ADE80', border: '1px solid #4ADE8040' }
-                        : { backgroundColor: '#181B24', color: '#64748B', border: '1px solid #1E2235' }
+                        ? { backgroundColor: '#1FD97820', color: '#1FD978', border: '1px solid #1FD97840' }
+                        : { backgroundColor: '#212225', color: '#A1A1AA', border: '1px solid #272A2D' }
                       }
                     >
                       {n} players
@@ -281,8 +281,8 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
                       onClick={() => setMinParticipants(n)}
                       className="text-[11px] font-bold px-3 py-1.5 rounded-[6px] transition-colors"
                       style={minParticipants === n
-                        ? { backgroundColor: '#4ADE8020', color: '#4ADE80', border: '1px solid #4ADE8040' }
-                        : { backgroundColor: '#181B24', color: '#64748B', border: '1px solid #1E2235' }
+                        ? { backgroundColor: '#1FD97820', color: '#1FD978', border: '1px solid #1FD97840' }
+                        : { backgroundColor: '#212225', color: '#A1A1AA', border: '1px solid #272A2D' }
                       }
                     >
                       {n}
@@ -294,7 +294,7 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
           )}
 
           {/* Ruleset reminder */}
-          <div className="bg-pumple-elevated rounded-[8px] p-3 mt-3" style={{ borderLeft: '2px solid #4ADE80' }}>
+          <div className="bg-pumple-elevated rounded-[8px] p-3 mt-3" style={{ borderLeft: '2px solid #1FD978' }}>
             <p className="text-[11px] font-bold text-pumple-primary mb-1">Battle Rules</p>
             <ul className="text-[11px] text-pumple-muted leading-relaxed list-disc list-inside space-y-0.5">
               {RULES.map(rule => (
@@ -305,7 +305,7 @@ export default function CreateBattleModal({ isOpen, onClose }: CreateBattleModal
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-2 p-4" style={{ borderTop: '1px solid #1E2235' }}>
+        <div className="flex justify-end gap-2 p-4" style={{ borderTop: '1px solid #272A2D' }}>
           <button onClick={onClose} className="btn-ghost text-[11px] px-4 py-2">
             Cancel
           </button>

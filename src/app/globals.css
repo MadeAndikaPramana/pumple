@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --color-pumple-bg: #0A0B0F;
-  --color-pumple-card: #111318;
-  --color-pumple-elevated: #181B24;
-  --color-pumple-border: #1E2235;
-  --color-pumple-dim: #2A2D3E;
-  --color-pumple-primary: #4ADE80;
-  --color-pumple-accent: #A3E635;
-  --color-pumple-red: #F43F5E;
-  --color-pumple-blue: #38BDF8;
-  --color-pumple-purple: #A78BFA;
-  --color-pumple-gold: #FBBF24;
-  --color-pumple-text: #F1F5F9;
-  --color-pumple-muted: #64748B;
+  --color-pumple-bg: #14151C;
+  --color-pumple-card: #18191B;
+  --color-pumple-elevated: #212225;
+  --color-pumple-border: #272A2D;
+  --color-pumple-dim: #313338;
+  --color-pumple-primary: #1FD978;
+  --color-pumple-accent: #86EFAC;
+  --color-pumple-red: #FF6467;
+  --color-pumple-blue: #60A5FA;
+  --color-pumple-purple: #C084FC;
+  --color-pumple-gold: #FACC15;
+  --color-pumple-text: #FAFAFA;
+  --color-pumple-muted: #A1A1AA;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
-  --font-display: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-display: var(--font-inter), ui-sans-serif, sans-serif;
 }
 
 * {
@@ -29,26 +29,18 @@ html {
 }
 
 body {
-  background-color: #0A0B0F;
-  color: #F1F5F9;
+  background-color: #14151C;
+  color: #FAFAFA;
   font-family: var(--font-sans);
-  /* Ambient glow + faint grid — the pump.fun "terminal at 3am" feel */
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(74, 222, 128, 0.06), transparent),
-    radial-gradient(ellipse 60% 40% at 90% 110%, rgba(163, 230, 53, 0.03), transparent),
-    linear-gradient(rgba(30, 34, 53, 0.22) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(30, 34, 53, 0.22) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
-  background-attachment: fixed;
 }
 
 ::selection {
-  background: rgba(74, 222, 128, 0.35);
-  color: #F1F5F9;
+  background: rgba(134, 239, 172, 0.35);
+  color: #FAFAFA;
 }
 
 :focus-visible {
-  outline: 2px solid rgba(74, 222, 128, 0.7);
+  outline: 2px solid rgba(134, 239, 172, 0.7);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -63,12 +55,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1E2235;
+  background: #272A2D;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2A2D3E;
+  background: #313338;
 }
 
 /* ── Keyframes ─────────────────────────────────────────────────────────── */
@@ -84,13 +76,13 @@ body {
 }
 
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 18px rgba(74, 222, 128, 0.18), 0 0 2px rgba(74, 222, 128, 0.4); }
-  50%      { box-shadow: 0 0 32px rgba(74, 222, 128, 0.38), 0 0 4px rgba(74, 222, 128, 0.6); }
+  0%, 100% { box-shadow: 0 0 18px rgba(31, 217, 120, 0.18), 0 0 2px rgba(31, 217, 120, 0.4); }
+  50%      { box-shadow: 0 0 32px rgba(31, 217, 120, 0.38), 0 0 4px rgba(31, 217, 120, 0.6); }
 }
 
 @keyframes gold-pulse {
-  0%, 100% { box-shadow: 0 0 18px rgba(251, 191, 36, 0.15), 0 0 2px rgba(251, 191, 36, 0.35); }
-  50%      { box-shadow: 0 0 34px rgba(251, 191, 36, 0.35), 0 0 5px rgba(251, 191, 36, 0.55); }
+  0%, 100% { box-shadow: 0 0 18px rgba(250, 204, 21, 0.15), 0 0 2px rgba(250, 204, 21, 0.35); }
+  50%      { box-shadow: 0 0 34px rgba(250, 204, 21, 0.35), 0 0 5px rgba(250, 204, 21, 0.55); }
 }
 
 @keyframes float-bob {
@@ -135,7 +127,7 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 9999px;
-  background: #4ADE80;
+  background: #1FD978;
   flex-shrink: 0;
 }
 
@@ -144,31 +136,30 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  background: #4ADE80;
+  background: #1FD978;
   animation: ping-dot 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-.live-dot--red { background: #F43F5E; }
-.live-dot--red::after { background: #F43F5E; }
-.live-dot--gold { background: #FBBF24; }
-.live-dot--gold::after { background: #FBBF24; }
+.live-dot--red { background: #FF6467; }
+.live-dot--red::after { background: #FF6467; }
+.live-dot--gold { background: #FACC15; }
+.live-dot--gold::after { background: #FACC15; }
 
 /* ── Cards ─────────────────────────────────────────────────────────────── */
 
 .p-card {
-  background-color: #111318;
-  border: 1px solid #1E2235;
+  background-color: #18191B;
+  border: 1px solid #272A2D;
   border-radius: 14px;
 }
 
 .p-card-hover {
-  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+  transition: border-color 150ms ease, transform 150ms ease;
 }
 
 .p-card-hover:hover {
-  border-color: rgba(74, 222, 128, 0.35);
-  box-shadow: 0 0 24px rgba(74, 222, 128, 0.08), 0 4px 16px rgba(0, 0, 0, 0.4);
-  transform: translateY(-1px);
+  border-color: #313338;
+  transform: scale(1.015);
 }
 
 /* King-of-the-hill spotlight frame */
@@ -176,7 +167,7 @@ body {
   position: relative;
   border-radius: 16px;
   padding: 1.5px;
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.85), rgba(74, 222, 128, 0.5) 40%, rgba(251, 191, 36, 0.2) 70%, rgba(251, 191, 36, 0.85));
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.85), rgba(134, 239, 172, 0.5) 40%, rgba(250, 204, 21, 0.2) 70%, rgba(250, 204, 21, 0.85));
   animation: gold-pulse 3s ease-in-out infinite;
 }
 
@@ -187,24 +178,21 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: #4ADE80;
-  color: #08090C;
-  font-weight: 800;
-  border-radius: 10px;
-  border: 1px solid rgba(74, 222, 128, 0.4);
-  box-shadow: 0 3px 0 rgba(34, 120, 68, 0.9), 0 0 18px rgba(74, 222, 128, 0.25);
+  background: #86EFAC;
+  color: #052E16;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
   cursor: pointer;
-  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, filter 120ms ease;
+  transition: filter 120ms ease;
 }
 
 .btn-degen:hover {
-  filter: brightness(1.08);
-  box-shadow: 0 3px 0 rgba(34, 120, 68, 0.9), 0 0 28px rgba(74, 222, 128, 0.45);
+  filter: brightness(1.06);
 }
 
 .btn-degen:active {
-  transform: translateY(2px) scale(0.99);
-  box-shadow: 0 1px 0 rgba(34, 120, 68, 0.9), 0 0 12px rgba(74, 222, 128, 0.3);
+  filter: brightness(0.96);
 }
 
 .btn-ghost {
@@ -212,19 +200,19 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: #181B24;
-  color: #64748B;
-  font-weight: 700;
-  border: 1px solid #1E2235;
-  border-radius: 10px;
+  background: #212225;
+  color: #A1A1AA;
+  font-weight: 600;
+  border: 1px solid #272A2D;
+  border-radius: 12px;
   cursor: pointer;
   transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
 }
 
 .btn-ghost:hover {
-  color: #F1F5F9;
-  border-color: #2A2D3E;
-  background: #1C202B;
+  color: #FAFAFA;
+  border-color: #313338;
+  background: #212225;
 }
 
 .btn-outline-lime {
@@ -232,18 +220,17 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: rgba(74, 222, 128, 0.08);
-  color: #4ADE80;
-  font-weight: 700;
-  border: 1px solid rgba(74, 222, 128, 0.35);
-  border-radius: 10px;
+  background: rgba(134, 239, 172, 0.08);
+  color: #86EFAC;
+  font-weight: 600;
+  border: 1px solid rgba(134, 239, 172, 0.35);
+  border-radius: 12px;
   cursor: pointer;
-  transition: background 150ms ease, box-shadow 150ms ease;
+  transition: background 150ms ease;
 }
 
 .btn-outline-lime:hover {
-  background: rgba(74, 222, 128, 0.16);
-  box-shadow: 0 0 16px rgba(74, 222, 128, 0.18);
+  background: rgba(134, 239, 172, 0.16);
 }
 
 /* ── Pills / chips ─────────────────────────────────────────────────────── */
@@ -257,35 +244,34 @@ body {
   border-radius: 9999px;
   font-weight: 600;
   cursor: pointer;
-  background: #181B24;
-  color: #64748B;
-  border: 1px solid #1E2235;
-  transition: color 150ms ease, background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+  background: #212225;
+  color: #A1A1AA;
+  border: 1px solid #272A2D;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
 }
 
 .pill:hover {
-  color: #F1F5F9;
-  border-color: #2A2D3E;
+  color: #FAFAFA;
+  border-color: #313338;
 }
 
 .pill--active {
-  background: #4ADE80;
-  color: #08090C;
-  font-weight: 800;
-  border-color: #4ADE80;
-  box-shadow: 0 0 14px rgba(74, 222, 128, 0.35);
+  background: #86EFAC;
+  color: #052E16;
+  font-weight: 700;
+  border-color: #86EFAC;
 }
 
 .pill--active:hover {
-  color: #08090C;
-  border-color: #4ADE80;
+  color: #052E16;
+  border-color: #86EFAC;
 }
 
 /* ── Confidence / progress bars ────────────────────────────────────────── */
 
 .bar-track {
   height: 5px;
-  background: #2A2D3E;
+  background: #313338;
   border-radius: 9999px;
   overflow: hidden;
   position: relative;
@@ -317,11 +303,11 @@ body {
 }
 
 .text-glow-lime {
-  text-shadow: 0 0 18px rgba(74, 222, 128, 0.55);
+  text-shadow: 0 0 14px rgba(31, 217, 120, 0.4);
 }
 
 .text-glow-gold {
-  text-shadow: 0 0 18px rgba(251, 191, 36, 0.55);
+  text-shadow: 0 0 18px rgba(250, 204, 21, 0.55);
 }
 
 /* Tabular numbers for anything price-like */

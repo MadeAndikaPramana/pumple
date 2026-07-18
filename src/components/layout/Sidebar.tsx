@@ -38,13 +38,12 @@ export default function Sidebar() {
       <Link href="/dashboard" className="block p-3 border-b border-pumple-border group">
         <div className="flex items-center gap-2.5">
           <div
-            className="w-8 h-8 rounded-[9px] bg-pumple-primary flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-6"
-            style={{ boxShadow: '0 0 16px rgba(74,222,128,0.45)' }}
+            className="w-8 h-8 rounded-[9px] bg-pumple-primary flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-105"
           >
             <Zap size={16} className="text-black" fill="currentColor" />
           </div>
           <div>
-            <p className="font-display text-[15px] font-bold text-pumple-text leading-none text-glow-lime">
+            <p className="font-display text-[15px] font-bold text-pumple-text leading-none">
               PUMPLE
             </p>
             <p className="text-[8px] font-bold text-pumple-primary tracking-[0.22em] leading-none mt-1">
@@ -62,17 +61,16 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
-              className={`relative flex items-center gap-2.5 px-3 py-2.5 rounded-[10px] text-[13px] transition-all duration-150 ${
+              className={`relative flex items-center gap-2.5 px-3 py-2.5 rounded-[10px] text-[13px] transition-colors duration-150 ${
                 isActive
-                  ? 'bg-pumple-primary/12 text-pumple-primary font-bold border border-pumple-primary/25'
-                  : 'text-pumple-muted font-medium border border-transparent hover:bg-pumple-elevated hover:text-pumple-text hover:translate-x-0.5'
+                  ? 'bg-pumple-elevated text-pumple-text font-semibold'
+                  : 'text-pumple-muted font-medium hover:bg-pumple-elevated/60 hover:text-pumple-text'
               }`}
-              style={isActive ? { boxShadow: 'inset 0 0 18px rgba(74,222,128,0.06), 0 0 12px rgba(74,222,128,0.08)' } : undefined}
             >
               {isActive && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-pumple-primary" style={{ boxShadow: '0 0 8px rgba(74,222,128,0.8)' }} />
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-full bg-pumple-primary" />
               )}
-              <Icon size={17} className={isActive ? 'drop-shadow-[0_0_6px_rgba(74,222,128,0.6)]' : ''} />
+              <Icon size={17} />
               {label}
               {live && <span className="live-dot ml-auto" aria-hidden />}
             </Link>
@@ -117,7 +115,7 @@ export default function Sidebar() {
       <div className="p-3 border-t border-pumple-border">
         <Link href="/profile/CryptoSniper_X" className="flex items-center gap-2 group">
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-pumple-purple/15 border border-pumple-purple/50 transition-shadow group-hover:shadow-[0_0_12px_rgba(167,139,250,0.35)]"
+            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-pumple-purple/15 border border-pumple-purple/50 transition-shadow group-hover:shadow-[0_0_12px_rgba(192, 132, 252,0.35)]"
           >
             <Target size={14} className="text-pumple-purple" />
           </div>

@@ -9,11 +9,11 @@ import TierBadge from '@/components/ui/TierBadge'
 import { FEED_POSTS, LEADERBOARD, BATTLES } from '@/lib/mock-data'
 
 const POST_TYPE_STYLES: Record<string, { color: string; bg: string }> = {
-  Analysis: { color: '#38BDF8', bg: '#38BDF815' },
-  Signal:   { color: '#4ADE80', bg: '#4ADE8015' },
-  News:     { color: '#FBBF24', bg: '#FBBF2415' },
-  Degen:    { color: '#F43F5E', bg: '#F43F5E15' },
-  Gm:       { color: '#A78BFA', bg: '#A78BFA15' },
+  Analysis: { color: '#60A5FA', bg: '#60A5FA15' },
+  Signal:   { color: '#1FD978', bg: '#1FD97815' },
+  News:     { color: '#FACC15', bg: '#FACC1515' },
+  Degen:    { color: '#FF6467', bg: '#FF646715' },
+  Gm:       { color: '#C084FC', bg: '#C084FC15' },
 }
 
 const TABS = ['For You', 'Following', 'Trending', 'Signals Only', 'Community']
@@ -102,7 +102,7 @@ function PostCard({ post }: { post: PostLike }) {
         {post.coinTags.length > 0 && (
           <span className="ml-1">
             {post.coinTags.map(tag => (
-              <span key={tag} className="text-xs font-semibold mr-1" style={{ color: '#4ADE8080' }}>
+              <span key={tag} className="text-xs font-semibold mr-1" style={{ color: '#1FD97880' }}>
                 {tag}
               </span>
             ))}
@@ -168,9 +168,9 @@ export default function FeedPage() {
           <div className="flex gap-3 mb-3">
             <div
               className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: '#A78BFA20', border: '2px solid #A78BFA60' }}
+              style={{ backgroundColor: '#C084FC20', border: '2px solid #C084FC60' }}
             >
-              <Target size={15} style={{ color: '#A78BFA' }} />
+              <Target size={15} style={{ color: '#C084FC' }} />
             </div>
             <textarea
               value={composeText}
@@ -188,8 +188,8 @@ export default function FeedPage() {
                   className="text-[11px] font-semibold px-2 py-0.5 rounded-[4px] transition-colors"
                   style={
                     selectedCoins.includes(coin)
-                      ? { backgroundColor: '#4ADE8020', color: '#4ADE80', border: '1px solid #4ADE8040' }
-                      : { backgroundColor: '#181B24', color: '#64748B', border: '1px solid #1E2235' }
+                      ? { backgroundColor: '#1FD97820', color: '#1FD978', border: '1px solid #1FD97840' }
+                      : { backgroundColor: '#212225', color: '#A1A1AA', border: '1px solid #272A2D' }
                   }
                 >
                   {coin}
@@ -290,14 +290,14 @@ export default function FeedPage() {
                 key={item.coin}
                 onClick={() => setCommunityCoin(item.coin)}
                 className="flex items-center justify-between py-2 cursor-pointer hover:bg-pumple-elevated/50 rounded px-1"
-                style={{ borderBottom: i < TOP_COMMUNITIES.length - 1 ? '1px solid #1E2235' : 'none' }}
+                style={{ borderBottom: i < TOP_COMMUNITIES.length - 1 ? '1px solid #272A2D' : 'none' }}
               >
                 <div>
                   <p className="text-sm font-bold text-pumple-primary">{item.coin}</p>
                   <p className="text-[10px] text-pumple-muted">{item.members} members</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs font-bold" style={{ color: item.up ? '#4ADE80' : '#F43F5E' }}>{item.change}</p>
+                  <p className="text-xs font-bold" style={{ color: item.up ? '#1FD978' : '#FF6467' }}>{item.change}</p>
                   <p className="text-[10px] text-pumple-muted">{item.posts} posts</p>
                 </div>
               </div>
@@ -312,7 +312,7 @@ export default function FeedPage() {
                 <div
                   key={item.coin}
                   className="flex justify-between items-center py-2"
-                  style={{ borderBottom: i < TRENDING_COINS.length - 1 ? '1px solid #1E2235' : 'none' }}
+                  style={{ borderBottom: i < TRENDING_COINS.length - 1 ? '1px solid #272A2D' : 'none' }}
                 >
                   <div>
                     <p className="text-sm font-bold text-pumple-primary">{item.coin}</p>
@@ -320,10 +320,10 @@ export default function FeedPage() {
                   </div>
                   <div className="flex items-center gap-1">
                     {item.up
-                      ? <TrendingUp size={12} style={{ color: '#4ADE80' }} />
-                      : <TrendingDown size={12} style={{ color: '#F43F5E' }} />
+                      ? <TrendingUp size={12} style={{ color: '#1FD978' }} />
+                      : <TrendingDown size={12} style={{ color: '#FF6467' }} />
                     }
-                    <span className="text-xs font-bold" style={{ color: item.up ? '#4ADE80' : '#F43F5E' }}>
+                    <span className="text-xs font-bold" style={{ color: item.up ? '#1FD978' : '#FF6467' }}>
                       {item.change}
                     </span>
                   </div>
@@ -340,7 +340,7 @@ export default function FeedPage() {
                   <div
                     key={entry.user}
                     className="flex items-center justify-between py-2"
-                    style={{ borderBottom: i < whoToFollow.length - 1 ? '1px solid #1E2235' : 'none' }}
+                    style={{ borderBottom: i < whoToFollow.length - 1 ? '1px solid #272A2D' : 'none' }}
                   >
                     <div className="flex items-center gap-2.5">
                       <div
@@ -372,7 +372,7 @@ export default function FeedPage() {
                 <div
                   key={battle.id}
                   className="py-2"
-                  style={{ borderBottom: i < liveBattles.length - 1 ? '1px solid #1E2235' : 'none' }}
+                  style={{ borderBottom: i < liveBattles.length - 1 ? '1px solid #272A2D' : 'none' }}
                 >
                   <div className="flex items-center justify-between mb-0.5">
                     <span className="text-[11px] font-bold text-pumple-text truncate max-w-[150px]">
@@ -381,11 +381,11 @@ export default function FeedPage() {
                     <span className="text-[10px] text-pumple-muted flex-shrink-0">{battle.timeLeft ?? battle.duration} left</span>
                   </div>
                   <div className="flex items-center gap-2 text-[11px]">
-                    <span style={{ color: battle.player1.currentPnL >= 0 ? '#4ADE80' : '#F43F5E', fontSize: '10px', fontWeight: 700 }}>
+                    <span style={{ color: battle.player1.currentPnL >= 0 ? '#1FD978' : '#FF6467', fontSize: '10px', fontWeight: 700 }}>
                       {battle.player1.currentPnL >= 0 ? '+' : ''}{battle.player1.currentPnL}%
                     </span>
                     <span className="text-pumple-dim font-bold text-[9px]">VS</span>
-                    <span style={{ color: (battle.player2?.currentPnL ?? 0) >= 0 ? '#4ADE80' : '#F43F5E', fontSize: '10px', fontWeight: 700 }}>
+                    <span style={{ color: (battle.player2?.currentPnL ?? 0) >= 0 ? '#1FD978' : '#FF6467', fontSize: '10px', fontWeight: 700 }}>
                       {battle.player2 ? `${battle.player2.currentPnL >= 0 ? '+' : ''}${battle.player2.currentPnL}%` : '—'}
                     </span>
                   </div>

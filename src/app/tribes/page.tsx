@@ -99,9 +99,9 @@ export default function TribesPage() {
                   <span
                     className="flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded-[3px]"
                     style={{
-                      backgroundColor: '#FBBF2420',
-                      color: '#FBBF24',
-                      border: '1px solid #FBBF2440',
+                      backgroundColor: '#FACC1520',
+                      color: '#FACC15',
+                      border: '1px solid #FACC1540',
                     }}
                   >
                     <Lock size={8} />
@@ -135,14 +135,14 @@ export default function TribesPage() {
                   style={
                     tribe.isPrivate
                       ? {
-                          backgroundColor: '#FBBF2420',
-                          color: '#FBBF24',
-                          border: '1px solid #FBBF2440',
+                          backgroundColor: '#FACC1520',
+                          color: '#FACC15',
+                          border: '1px solid #FACC1540',
                         }
                       : {
-                          backgroundColor: '#4ADE8020',
-                          color: '#4ADE80',
-                          border: '1px solid #4ADE8040',
+                          backgroundColor: '#1FD97820',
+                          color: '#1FD978',
+                          border: '1px solid #1FD97840',
                         }
                   }
                 >
@@ -165,7 +165,7 @@ export default function TribesPage() {
               <div
                 key={tribe.name}
                 className="flex items-center justify-between py-2"
-                style={{ borderBottom: i < topTribes.length - 1 ? '1px solid #1E2235' : 'none' }}
+                style={{ borderBottom: i < topTribes.length - 1 ? '1px solid #272A2D' : 'none' }}
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-xs font-bold text-pumple-muted w-4 flex-shrink-0">{i + 1}</span>

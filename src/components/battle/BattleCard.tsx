@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { Clock, Coins, Eye, Sword, Sparkles } from 'lucide-react'
-import { TIERS, type Battle, type BattlePlayer } from '@/types'
+import type { Battle, BattlePlayer } from '@/types'
 import TierBadge from '@/components/ui/TierBadge'
+import TraderAvatar from '@/components/ui/TraderAvatar'
 
 const KEYFRAMES = `
 @keyframes slideInLeft {
@@ -16,7 +17,7 @@ const KEYFRAMES = `
 }
 @keyframes clash {
   0% { transform: scale(1); }
-  50% { transform: scale(1.3); filter: brightness(2) drop-shadow(0 0 8px rgba(74,222,128,0.8)); }
+  50% { transform: scale(1.3); filter: brightness(2) drop-shadow(0 0 8px rgba(31, 217, 120,0.8)); }
   100% { transform: scale(1); }
 }
 @keyframes sparkle {
@@ -31,11 +32,10 @@ function fmtPnl(n: number) {
 }
 
 function pnlColor(n: number) {
-  return n >= 0 ? '#4ADE80' : '#F43F5E'
+  return n >= 0 ? '#1FD978' : '#FF6467'
 }
 
 function PlayerSide({ player, align }: { player: BattlePlayer; align: 'left' | 'right' }) {
-  const tierColor = TIERS[player.tier].color
   const positive = player.currentPnL >= 0
   const fill = Math.max(5, Math.min(95, 50 + player.currentPnL / 2))
   const activePositions = player.positions.filter(p => p.status === 'active')
@@ -45,12 +45,7 @@ function PlayerSide({ player, align }: { player: BattlePlayer; align: 'left' | '
     <div className="flex-1 min-w-0">
       {/* Identity */}
       <div className={`flex items-center gap-2 ${isRight ? 'flex-row-reverse' : ''}`}>
-        <div
-          className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0"
-          style={{ backgroundColor: `${tierColor}20`, border: `2px solid ${tierColor}`, color: tierColor }}
-        >
-          {player.username.slice(0, 1).toUpperCase()}
-        </div>
+        <TraderAvatar name={player.username} tier={player.tier} size="md" className="flex-shrink-0" />
         <div className={`min-w-0 ${isRight ? 'text-right' : ''}`}>
           <p className="text-xs font-bold text-pumple-text truncate">{player.username}</p>
           <TierBadge tier={player.tier} size="sm" />
@@ -72,9 +67,9 @@ function PlayerSide({ player, align }: { player: BattlePlayer; align: 'left' | '
               width: `${fill}%`,
               marginLeft: isRight ? 'auto' : 0,
               background: positive
-                ? 'linear-gradient(90deg, #4ADE8070, #4ADE80)'
-                : 'linear-gradient(90deg, #F43F5E70, #F43F5E)',
-              boxShadow: positive ? '0 0 8px rgba(74,222,128,0.4)' : '0 0 8px rgba(244,63,94,0.4)',
+                ? 'linear-gradient(90deg, #1FD97870, #1FD978)'
+                : 'linear-gradient(90deg, #FF646770, #FF6467)',
+              boxShadow: positive ? '0 0 8px rgba(31, 217, 120,0.4)' : '0 0 8px rgba(255, 100, 103,0.4)',
             }}
           />
         </div>
@@ -84,7 +79,7 @@ function PlayerSide({ player, align }: { player: BattlePlayer; align: 'left' | '
       {activePositions.length > 0 && (
         <div className={`mt-2 flex flex-col gap-1 ${isRight ? 'items-end' : 'items-start'}`}>
           {activePositions.map(pos => {
-            const dirColor = pos.direction === 'LONG' ? '#4ADE80' : '#F43F5E'
+            const dirColor = pos.direction === 'LONG' ? '#1FD978' : '#FF6467'
             return (
               <div key={pos.id} className="bg-pumple-elevated rounded-md px-2 py-1 text-[10px] flex items-center gap-1.5">
                 <span
@@ -128,7 +123,7 @@ export default function BattleCard({ battle }: { battle: Battle }) {
       )}
 
       {/* Clashing swords animation header */}
-      <div className="h-[60px] bg-gradient-to-r from-[#0A0B0F] via-[#1A1D27] to-[#0A0B0F] relative overflow-hidden flex items-center justify-center">
+      <div className="h-[60px] bg-gradient-to-r from-[#14151C] via-[#212225] to-[#14151C] relative overflow-hidden flex items-center justify-center">
         <div
           className="flex items-center justify-center"
           style={phase === 'clash' ? { animationName: 'clash', animationDuration: '0.4s', animationFillMode: 'forwards' } : undefined}
@@ -166,7 +161,7 @@ export default function BattleCard({ battle }: { battle: Battle }) {
       </div>
 
       {/* Main battle area */}
-      <div className="p-4">
+      <div className="p-3">
         <div className="flex items-start gap-3">
           <PlayerSide player={battle.player1} align="left" />
 

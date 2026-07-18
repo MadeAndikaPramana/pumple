@@ -9,19 +9,22 @@ import TierBadge from './TierBadge'
 
 const MiniChart = dynamic(() => import('./MiniChart'), { ssr: false })
 
+// Feed cards show a fixed-height sparkline; the full candlestick lives on the
+// signal detail page. Kept small so the card reads as a dense row of data.
+const SPARK_HEIGHT = 96
+
 interface SignalCardProps {
   signal: Signal
-  chartHeight?: number
 }
 
 function parsePrice(str: string): number {
   return parseFloat(str.replace(/[$,]/g, ''))
 }
 
-export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProps) {
+export default function SignalCard({ signal }: SignalCardProps) {
   const rarityColor = RARITY_COLORS[signal.rarity]
   const isLong = signal.direction === 'LONG'
-  const directionColor = isLong ? '#4ADE80' : '#F43F5E'
+  const directionColor = isLong ? '#1FD978' : '#FF6467'
   const isTopRarity = signal.rarity === 'legendary' || signal.rarity === 'mythic'
   const entryNum = parsePrice(signal.entry)
   const tpNum = parsePrice(signal.tp)
@@ -45,7 +48,7 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
 
   return (
     <div
-      className="bg-pumple-card rounded-[14px] p-3 relative overflow-hidden mb-3 p-card-hover"
+      className="bg-pumple-card rounded-[14px] p-3 relative overflow-hidden p-card-hover"
       style={{
         border: `1px solid ${rarityColor}${isTopRarity ? '50' : '30'}`,
         boxShadow: isTopRarity ? `0 0 22px ${rarityColor}14` : undefined,
@@ -59,9 +62,9 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
 
       {/* Row 1: Direction + coin + timeframe + R/R | rarity + time */}
       <div className="flex justify-between items-center mb-2 mt-1">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <span
-            className="flex items-center gap-1 text-[11px] font-black px-2 py-0.5 rounded-md"
+            className="flex items-center gap-1 text-[11px] font-black px-2 py-0.5 rounded-md flex-shrink-0"
             style={{
               backgroundColor: `${directionColor}1c`,
               color: directionColor,
@@ -73,18 +76,18 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
           </span>
           <Link
             href={`/signals/${signal.id}`}
-            className="font-display text-[15px] font-bold text-pumple-text hover:text-pumple-primary transition-colors cursor-pointer"
+            className="font-display text-[15px] font-bold text-pumple-text hover:text-pumple-primary transition-colors cursor-pointer truncate"
           >
             {signal.coin}
           </Link>
-          <span className="text-[10px] font-bold text-pumple-muted bg-pumple-elevated px-1.5 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold text-pumple-muted bg-pumple-elevated px-1.5 py-0.5 rounded-full flex-shrink-0">
             {signal.timeframe}
           </span>
-          <span className="text-[10px] font-bold tnum text-pumple-accent bg-pumple-accent/10 border border-pumple-accent/30 px-1.5 py-0.5 rounded">
+          <span className="text-[10px] font-bold tnum text-pumple-accent bg-pumple-accent/10 border border-pumple-accent/30 px-1.5 py-0.5 rounded flex-shrink-0">
             R/R 1:{rrRatio}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <span
             className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded"
             style={{
@@ -117,8 +120,13 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
         </div>
       </div>
 
-      {/* Chart / image carousel */}
-      <div className="my-2 relative" style={{ minHeight: `${chartHeight}px` }}>
+      {/* Sparkline / image carousel — compact; full chart lives on the detail page */}
+      <Link
+        href={`/signals/${signal.id}`}
+        className="block my-2 relative rounded-[8px] overflow-hidden"
+        style={{ height: `${SPARK_HEIGHT}px` }}
+        aria-label={`Open ${signal.coin} chart`}
+      >
         {slideIndex === 0 ? (
           <MiniChart
             entry={entryNum}
@@ -126,16 +134,24 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
             sl={slNum}
             direction={signal.direction}
             timeframe={signal.timeframe}
-            height={chartHeight}
+            height={SPARK_HEIGHT}
+            variant="spark"
           />
         ) : (
           <img
             src={signal.images![slideIndex - 1]}
-            className="w-full rounded-[8px] object-cover transition-opacity duration-300"
-            style={{ height: `${chartHeight}px` }}
+            className="w-full object-cover transition-opacity duration-300"
+            style={{ height: `${SPARK_HEIGHT}px` }}
             alt=""
           />
         )}
+      </Link>
+
+      {/* Compact price levels strip */}
+      <div className="flex items-center gap-3 text-[10px] tnum mt-1.5">
+        <span className="text-pumple-muted">Entry <span className="font-mono font-semibold text-pumple-text">{signal.entry}</span></span>
+        <span className="text-pumple-muted">TP <span className="font-mono font-semibold text-pumple-primary">{signal.tp}</span></span>
+        <span className="text-pumple-muted">SL <span className="font-mono font-semibold text-pumple-red">{signal.sl}</span></span>
       </div>
 
       {/* Slide dots — only when images exist */}
@@ -168,14 +184,14 @@ export default function SignalCard({ signal, chartHeight = 240 }: SignalCardProp
 
       {/* Footer */}
       <div className="flex justify-between items-center mt-2.5 pt-2.5 border-t border-pumple-border">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 min-w-0">
           <TierBadge tier={signal.tier} />
-          <Link href={`/profile/${signal.user}`} className="text-[11px] font-semibold text-pumple-text hover:text-pumple-primary transition-colors">
+          <Link href={`/profile/${signal.user}`} className="text-[11px] font-semibold text-pumple-text hover:text-pumple-primary transition-colors truncate">
             @{signal.user}
           </Link>
-          <span className="text-[11px] font-bold tnum text-pumple-primary">{signal.accuracy}</span>
+          <span className="text-[11px] font-bold tnum text-pumple-primary flex-shrink-0">{signal.accuracy}</span>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 flex-shrink-0">
           <button className="btn-ghost text-[11px] px-2 py-1 rounded-md">
             <ThumbsUp size={10} />
             <span className="tnum">{signal.likes}</span>

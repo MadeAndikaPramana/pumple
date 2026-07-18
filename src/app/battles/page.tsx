@@ -13,10 +13,10 @@ import { BATTLES, TOURNAMENTS, TRIBE_WARS } from '@/lib/mock-data'
 type Mode = 'all' | 'classic_1v1' | 'tournament' | 'mock' | 'tribe_war'
 
 const ARENA_STATS = [
-  { label: 'Active battles', value: '34',          icon: Swords, color: '#4ADE80' },
-  { label: 'Total staked',   value: '42,400 $PUMP', icon: Coins, color: '#FBBF24' },
-  { label: 'Your win rate',  value: '68%',         icon: Target, color: '#A78BFA' },
-  { label: 'Watching now',   value: '2,090',       icon: Eye,    color: '#38BDF8' },
+  { label: 'Active battles', value: '34',          icon: Swords, color: '#1FD978' },
+  { label: 'Total staked',   value: '42,400 $PUMP', icon: Coins, color: '#FACC15' },
+  { label: 'Your win rate',  value: '68%',         icon: Target, color: '#C084FC' },
+  { label: 'Watching now',   value: '2,090',       icon: Eye,    color: '#60A5FA' },
 ]
 
 const MODE_TABS: { id: Mode; label: string; icon?: LucideIcon }[] = [
@@ -45,7 +45,7 @@ export default function BattlesPage() {
       <div className="flex justify-between items-start">
         <div>
           <h1 className="flex items-center gap-2 font-display text-2xl font-bold text-pumple-text">
-            <Swords size={22} className="text-pumple-accent" style={{ filter: 'drop-shadow(0 0 8px rgba(163,230,53,0.5))' }} />
+            <Swords size={22} className="text-pumple-accent" style={{ filter: 'drop-shadow(0 0 8px rgba(134, 239, 172,0.5))' }} />
             Trading Arena
           </h1>
           <p className="text-sm text-pumple-muted mt-1">Compete. Prove your accuracy. Earn $PUMP.</p>

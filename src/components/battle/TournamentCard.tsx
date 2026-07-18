@@ -4,9 +4,9 @@ import { Trophy, Users, Layers, Ticket } from 'lucide-react'
 import type { TournamentBracket } from '@/types'
 
 const STATUS_STYLES: Record<TournamentBracket['status'], { label: string; color: string; pulse: boolean }> = {
-  registering: { label: 'Registering', color: '#38BDF8', pulse: false },
-  active:      { label: 'Active',      color: '#4ADE80', pulse: true  },
-  completed:   { label: 'Completed',   color: '#64748B', pulse: false },
+  registering: { label: 'Registering', color: '#60A5FA', pulse: false },
+  active:      { label: 'Active',      color: '#1FD978', pulse: true  },
+  completed:   { label: 'Completed',   color: '#A1A1AA', pulse: false },
 }
 
 export default function TournamentCard({ tournament }: { tournament: TournamentBracket }) {
@@ -19,7 +19,7 @@ export default function TournamentCard({ tournament }: { tournament: TournamentB
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
-          <Trophy size={18} className="text-pumple-gold flex-shrink-0" style={{ filter: 'drop-shadow(0 0 6px rgba(251,191,36,0.5))' }} />
+          <Trophy size={18} className="text-pumple-gold flex-shrink-0" style={{ filter: 'drop-shadow(0 0 6px rgba(250, 204, 21,0.5))' }} />
           <span className="font-display text-base font-bold text-pumple-text truncate">{tournament.name}</span>
           <span
             className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full flex-shrink-0"
@@ -61,7 +61,7 @@ export default function TournamentCard({ tournament }: { tournament: TournamentB
           <div className="bar-track !h-2">
             <div
               className="bar-fill transition-all duration-500"
-              style={{ width: `${regPct}%`, background: 'linear-gradient(90deg, #4ADE8080, #4ADE80)' }}
+              style={{ width: `${regPct}%`, background: 'linear-gradient(90deg, #1FD97880, #1FD978)' }}
             />
           </div>
         </div>

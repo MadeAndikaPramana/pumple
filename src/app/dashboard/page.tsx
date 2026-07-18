@@ -6,18 +6,19 @@ import { Radio, Target, Swords, Flame, Bot, Shield, Crown, Sparkles } from 'luci
 import StatCard from '@/components/ui/StatCard'
 import SignalCard from '@/components/ui/SignalCard'
 import TierBadge from '@/components/ui/TierBadge'
+import TraderAvatar from '@/components/ui/TraderAvatar'
 import { SIGNALS, BATTLES, FEED_POSTS, LEADERBOARD } from '@/lib/mock-data'
 import { TIERS } from '@/types'
 
 const STATS = [
-  { label: 'Signals today',   value: '247',      icon: Radio,   color: '#4ADE80' },
-  { label: 'Your accuracy',   value: '78.4%',    icon: Target,  color: '#A78BFA' },
-  { label: 'Active battles',  value: '34',       icon: Swords,  color: '#FBBF24' },
-  { label: 'Win streak',      value: '5 days',   icon: Flame,   color: '#A3E635' },
+  { label: 'Signals today',   value: '247',      icon: Radio,   color: '#1FD978' },
+  { label: 'Your accuracy',   value: '78.4%',    icon: Target,  color: '#C084FC' },
+  { label: 'Active battles',  value: '34',       icon: Swords,  color: '#FACC15' },
+  { label: 'Win streak',      value: '5 days',   icon: Flame,   color: '#86EFAC' },
 ]
 
 function confColor(c: number): string {
-  return c >= 80 ? '#4ADE80' : c >= 65 ? '#FBBF24' : '#F43F5E'
+  return c >= 80 ? '#1FD978' : c >= 65 ? '#FACC15' : '#FF6467'
 }
 
 export default function DashboardPage() {
@@ -26,7 +27,6 @@ export default function DashboardPage() {
   const trendingPosts = [...FEED_POSTS].sort((a, b) => b.likes - a.likes).slice(0, 2)
   const topSignals = [...SIGNALS].sort((a, b) => b.confidence - a.confidence).slice(0, 3)
   const topTrader = LEADERBOARD[0]
-  const traderTierColor = TIERS[topTrader.tier].color
 
   return (
     <motion.div
@@ -91,7 +91,7 @@ export default function DashboardPage() {
               <Crown
                 size={16}
                 className="text-pumple-gold"
-                style={{ animation: 'float-bob 3s ease-in-out infinite', filter: 'drop-shadow(0 0 6px rgba(251,191,36,0.6))' }}
+                style={{ animation: 'float-bob 3s ease-in-out infinite', filter: 'drop-shadow(0 0 6px rgba(250, 204, 21,0.6))' }}
               />
               King of the Hill
               <span className="text-[9px] font-black uppercase tracking-wider text-pumple-gold bg-pumple-gold/10 border border-pumple-gold/30 px-1.5 py-0.5 rounded-full">
@@ -105,6 +105,23 @@ export default function DashboardPage() {
           <div className="max-w-[680px] king-frame [&>div]:mb-0">
             <SignalCard signal={topSignal} />
           </div>
+
+          {/* Join-a-tribe nudge — compact inline banner */}
+          <Link
+            href="/tribes"
+            className="p-card p-card-hover flex items-center gap-3 px-3 py-2.5 mt-4 group"
+          >
+            <div className="w-8 h-8 rounded-[10px] bg-pumple-primary/12 border border-pumple-primary/25 flex items-center justify-center flex-shrink-0">
+              <Shield size={15} className="text-pumple-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-pumple-text truncate">You haven&apos;t joined a tribe yet</p>
+              <p className="text-[11px] text-pumple-muted truncate">Team up to compete together and earn more $PUMP</p>
+            </div>
+            <span className="btn-outline-lime text-[11px] px-3 py-1.5 flex-shrink-0">
+              Discover tribes →
+            </span>
+          </Link>
 
           {/* 3. AI insight + Battle highlight */}
           <div className="grid grid-cols-2 gap-4 mt-4">
@@ -145,14 +162,14 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-pumple-primary">{topBattle.player1.username}</span>
-                  <span className="font-bold tnum" style={{ color: topBattle.player1.currentPnL >= 0 ? '#4ADE80' : '#F43F5E' }}>
+                  <span className="font-bold tnum" style={{ color: topBattle.player1.currentPnL >= 0 ? '#1FD978' : '#FF6467' }}>
                     {topBattle.player1.currentPnL >= 0 ? '+' : ''}{topBattle.player1.currentPnL}%
                   </span>
                 </div>
                 {topBattle.player2 && (
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-semibold text-pumple-text">{topBattle.player2.username}</span>
-                    <span className="font-bold tnum" style={{ color: topBattle.player2.currentPnL >= 0 ? '#4ADE80' : '#F43F5E' }}>
+                    <span className="font-bold tnum" style={{ color: topBattle.player2.currentPnL >= 0 ? '#1FD978' : '#FF6467' }}>
                       {topBattle.player2.currentPnL >= 0 ? '+' : ''}{topBattle.player2.currentPnL}%
                     </span>
                   </div>
@@ -168,56 +185,33 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* 4. Tribe CTA + Trending in feed */}
-          <div className="grid grid-cols-2 gap-4 mt-4">
-
-            {/* Tribe CTA */}
-            <div className="p-card p-card-hover p-4 flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-[14px] bg-pumple-elevated border border-pumple-border flex items-center justify-center mb-3">
-                <Shield size={22} className="text-pumple-muted" />
-              </div>
-              <p className="text-sm font-semibold text-pumple-text mb-1">You haven&apos;t joined a tribe yet</p>
-              <p className="text-xs text-pumple-muted leading-relaxed mb-3">
-                Join a tribe to compete together and earn more $PUMP
-              </p>
-              <Link href="/tribes" className="btn-outline-lime text-xs px-3.5 py-1.5">
-                Discover tribes →
-              </Link>
-            </div>
-
-            {/* Trending in feed */}
-            <div className="p-card p-card-hover p-4">
-              <p className="font-display text-sm font-bold text-pumple-text mb-3">Trending in feed</p>
-              <div className="flex flex-col gap-3">
-                {trendingPosts.map(post => {
-                  const tierColor = TIERS[post.tier].color
-                  return (
-                    <div key={post.id} className="flex gap-2.5">
-                      <div
-                        className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                        style={{ backgroundColor: `${tierColor}20`, border: `2px solid ${tierColor}60`, color: tierColor }}
-                      >
-                        {post.user[0].toUpperCase()}
+          {/* 4. Trending in feed — full width, dense 2-col posts */}
+          <div className="p-card p-card-hover p-4 mt-4">
+            <p className="font-display text-sm font-bold text-pumple-text mb-3">Trending in feed</p>
+            <div className="grid sm:grid-cols-2 gap-x-4 gap-y-3">
+              {trendingPosts.map(post => {
+                const tierColor = TIERS[post.tier].color
+                return (
+                  <div key={post.id} className="flex gap-2.5 min-w-0">
+                    <TraderAvatar name={post.user} tier={post.tier} size="sm" className="!border-2" />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 mb-0.5 min-w-0">
+                        <span className="text-xs font-semibold text-pumple-text truncate">{post.user}</span>
+                        <TierBadge tier={post.tier} size="sm" />
                       </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5 mb-0.5">
-                          <span className="text-xs font-semibold text-pumple-text">{post.user}</span>
-                          <TierBadge tier={post.tier} size="sm" />
-                        </div>
-                        <p className="text-[11px] text-pumple-muted truncate">{post.content}</p>
-                        <div className="flex items-center gap-2 mt-0.5 text-[10px] tnum text-pumple-muted">
-                          <span>♥ {post.likes}</span>
-                          <span>· {post.reposts} reposts</span>
-                        </div>
+                      <p className="text-[11px] text-pumple-muted truncate">{post.content}</p>
+                      <div className="flex items-center gap-2 mt-0.5 text-[10px] tnum text-pumple-muted">
+                        <span>{post.likes} likes</span>
+                        <span>· {post.reposts} reposts</span>
                       </div>
                     </div>
-                  )
-                })}
-              </div>
-              <Link href="/feed" className="inline-block text-[11px] font-semibold text-pumple-primary mt-3 hover:underline">
-                Go to feed →
-              </Link>
+                  </div>
+                )
+              })}
             </div>
+            <Link href="/feed" className="inline-block text-[11px] font-semibold text-pumple-primary mt-3 hover:underline">
+              Go to feed →
+            </Link>
           </div>
         </div>
 
@@ -231,7 +225,7 @@ export default function DashboardPage() {
               <Link href="/signals" className="text-[11px] font-semibold text-pumple-primary hover:underline">View all</Link>
             </div>
             {topSignals.map((s, i) => {
-              const dirColor = s.direction === 'LONG' ? '#4ADE80' : '#F43F5E'
+              const dirColor = s.direction === 'LONG' ? '#1FD978' : '#FF6467'
               return (
                 <Link
                   href={`/signals/${s.id}`}
@@ -258,46 +252,36 @@ export default function DashboardPage() {
           </div>
 
           {/* Top Trader */}
-          <div className="p-card p-4">
-            <p className="font-display text-sm font-bold text-pumple-text mb-3">Top trader</p>
-            <div className="flex flex-col items-center text-center">
-              <div className="relative">
-                <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-black"
-                  style={{
-                    backgroundColor: `${traderTierColor}20`,
-                    border: `2px solid ${traderTierColor}`,
-                    color: traderTierColor,
-                    boxShadow: `0 0 18px ${traderTierColor}40`,
-                  }}
-                >
-                  {topTrader.user[0].toUpperCase()}
-                </div>
+          <div className="p-card p-3">
+            <p className="font-display text-sm font-bold text-pumple-text mb-2.5">Top trader</p>
+            <div className="flex items-center gap-3">
+              <Link href={`/profile/${topTrader.user}`} className="relative flex-shrink-0">
                 <Crown
-                  size={16}
-                  className="absolute -top-2 left-1/2 -translate-x-1/2 text-pumple-gold"
-                  style={{ filter: 'drop-shadow(0 0 5px rgba(251,191,36,0.7))' }}
+                  size={14}
+                  className="absolute -top-2 left-1/2 -translate-x-1/2 text-pumple-gold z-10"
+                  style={{ filter: 'drop-shadow(0 0 5px rgba(250, 204, 21,0.7))' }}
                 />
+                <TraderAvatar name={topTrader.user} tier={topTrader.tier} size="md" glow />
+              </Link>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <Link
+                    href={`/profile/${topTrader.user}`}
+                    className="text-sm font-bold text-pumple-text truncate hover:text-pumple-primary transition-colors"
+                  >
+                    {topTrader.user}
+                  </Link>
+                  <TierBadge tier={topTrader.tier} size="sm" />
+                </div>
+                <p className="text-[10px] tnum text-pumple-muted">{topTrader.calls} calls · {topTrader.streak} streak</p>
               </div>
-              <span className="text-sm font-bold text-pumple-text mt-2">{topTrader.user}</span>
-              <div className="mt-1">
-                <TierBadge tier={topTrader.tier} size="sm" />
-              </div>
-              <span className="font-display text-xl font-bold tnum text-pumple-primary mt-1 text-glow-lime">{topTrader.accuracy}</span>
-            </div>
-            <div className="flex justify-center gap-4 mt-2 pt-2 border-t border-pumple-border">
-              <div className="text-center">
-                <p className="text-[9px] uppercase font-bold text-pumple-muted mb-0.5">Calls</p>
-                <p className="text-xs font-bold tnum text-pumple-text">{topTrader.calls}</p>
-              </div>
-              <div className="text-center">
-                <p className="text-[9px] uppercase font-bold text-pumple-muted mb-0.5">Streak</p>
-                <p className="text-xs font-bold tnum text-pumple-text">{topTrader.streak}</p>
-              </div>
+              <span className="font-display text-lg font-bold tnum text-pumple-primary text-glow-lime flex-shrink-0">
+                {topTrader.accuracy}
+              </span>
             </div>
             <Link
               href={`/profile/${topTrader.user}`}
-              className="block text-[11px] font-semibold text-pumple-primary mt-2 text-center hover:underline"
+              className="block text-[11px] font-semibold text-pumple-primary mt-2.5 hover:underline"
             >
               View profile →
             </Link>

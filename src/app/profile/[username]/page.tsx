@@ -65,15 +65,15 @@ const TIER_ICONS: Record<TierKey, React.ReactNode> = {
 }
 
 const ACTIVITY_STYLES: Record<string, { color: string; icon: React.ReactNode }> = {
-  signal_won: { color: '#4ADE80', icon: <TrendingUp size={14} /> },
-  battle_won: { color: '#A78BFA', icon: <Swords size={14} /> },
-  tribe_join: { color: '#38BDF8', icon: <Shield size={14} /> },
-  rank_up:    { color: '#FBBF24', icon: <Crown size={14} /> },
-  called_it:  { color: '#A3E635', icon: <Target size={14} /> },
+  signal_won: { color: '#1FD978', icon: <TrendingUp size={14} /> },
+  battle_won: { color: '#C084FC', icon: <Swords size={14} /> },
+  tribe_join: { color: '#60A5FA', icon: <Shield size={14} /> },
+  rank_up:    { color: '#FACC15', icon: <Crown size={14} /> },
+  called_it:  { color: '#86EFAC', icon: <Target size={14} /> },
 }
 
 function dirColor(d: 'LONG' | 'SHORT') {
-  return d === 'LONG' ? '#4ADE80' : '#F43F5E'
+  return d === 'LONG' ? '#1FD978' : '#FF6467'
 }
 
 function DirectionBadge({ direction, size = 'sm' }: { direction: 'LONG' | 'SHORT'; size?: 'sm' | 'xs' }) {
@@ -96,7 +96,7 @@ export default function ProfilePage() {
   const tribeTierColor = TIERS[PROFILE.tribeTier].color
   const initials = PROFILE.displayName.split(' ').map(w => w[0]).join('').toUpperCase()
   const maxAcc = Math.max(...PROFILE.monthlyAccuracy)
-  const degenColor = PROFILE.degenScore > 70 ? '#F43F5E' : PROFILE.degenScore > 40 ? '#FBBF24' : '#64748B'
+  const degenColor = PROFILE.degenScore > 70 ? '#FF6467' : PROFILE.degenScore > 40 ? '#FACC15' : '#A1A1AA'
   const winRatePct = Math.round((PROFILE.battleRecord.won / (PROFILE.battleRecord.won + PROFILE.battleRecord.lost)) * 100)
 
   return (
@@ -113,7 +113,7 @@ export default function ProfilePage() {
           className="h-24 relative"
           style={{
             background:
-              'radial-gradient(ellipse 60% 120% at 15% 100%, rgba(74,222,128,0.18), transparent), radial-gradient(ellipse 50% 120% at 85% 0%, rgba(167,139,250,0.16), transparent), linear-gradient(135deg, #14161e, #1A1D27)',
+              'radial-gradient(ellipse 60% 120% at 15% 100%, rgba(31, 217, 120,0.18), transparent), radial-gradient(ellipse 50% 120% at 85% 0%, rgba(192, 132, 252,0.16), transparent), linear-gradient(135deg, #14151C, #212225)',
           }}
         >
           <div className="absolute top-3 right-3 bg-black/40 text-[10px] font-bold px-2 py-1 rounded-full">
@@ -171,11 +171,11 @@ export default function ProfilePage() {
           <div className="flex gap-6 mt-4 pt-4 border-t border-pumple-border flex-wrap">
             {[
               { label: 'Signals', value: PROFILE.totalSignals.toString(), color: undefined },
-              { label: 'Accuracy', value: PROFILE.accuracy, color: '#4ADE80' },
-              { label: 'Streak', value: `${PROFILE.winStreak} days`, color: PROFILE.winStreak >= 5 ? '#FBBF24' : undefined },
+              { label: 'Accuracy', value: PROFILE.accuracy, color: '#1FD978' },
+              { label: 'Streak', value: `${PROFILE.winStreak} days`, color: PROFILE.winStreak >= 5 ? '#FACC15' : undefined },
               { label: 'Battles', value: `${PROFILE.battleRecord.won}W ${PROFILE.battleRecord.lost}L`, color: undefined },
               { label: 'Followers', value: PROFILE.followers.toLocaleString(), color: undefined },
-              { label: '$PUMP', value: PROFILE.pumpEarned, color: '#A3E635' },
+              { label: '$PUMP', value: PROFILE.pumpEarned, color: '#86EFAC' },
             ].map(stat => (
               <div key={stat.label}>
                 <p className="flex items-center gap-1 text-sm font-black tnum" style={{ color: stat.color ?? undefined }}>
@@ -276,10 +276,10 @@ export default function ProfilePage() {
               {PROFILE.tierProgress.requirements.map(req => (
                 <div key={req.label} className="flex justify-between items-center py-1.5 border-b border-pumple-border last:border-0">
                   <div className="flex items-center gap-2">
-                    <CheckCircle size={12} style={{ color: req.met ? '#4ADE80' : '#2A2D3E' }} />
+                    <CheckCircle size={12} style={{ color: req.met ? '#1FD978' : '#313338' }} />
                     <span className="text-[11px] text-pumple-muted">{req.label}</span>
                   </div>
-                  <span className="text-[11px] font-bold" style={{ color: req.met ? '#4ADE80' : '#F1F5F9' }}>
+                  <span className="text-[11px] font-bold" style={{ color: req.met ? '#1FD978' : '#FAFAFA' }}>
                     {req.current}
                   </span>
                 </div>
@@ -457,7 +457,7 @@ export default function ProfilePage() {
                 <span className="text-[11px] text-pumple-muted hidden md:block">{battle.coin} · {battle.duration}</span>
 
                 <div className="flex items-center gap-3 ml-auto flex-shrink-0">
-                  <span className="text-sm font-bold" style={{ color: won ? '#4ADE80' : '#F43F5E' }}>Me: {battle.myPnL}</span>
+                  <span className="text-sm font-bold" style={{ color: won ? '#1FD978' : '#FF6467' }}>Me: {battle.myPnL}</span>
                   <span className="text-pumple-muted">·</span>
                   <span className="text-sm text-pumple-muted">Them: {battle.opponentPnL}</span>
                   <span className="text-[11px] text-pumple-muted hidden lg:block">{battle.timeAgo}</span>

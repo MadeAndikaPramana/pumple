@@ -1,21 +1,21 @@
 export type TierKey = 'apprentice' | 'trader' | 'sniper' | 'whale' | 'legend'
 
 export const TIERS: Record<TierKey, { label: string; color: string }> = {
-  apprentice: { label: 'Apprentice', color: '#94A3B8' },
-  trader:     { label: 'Trader',     color: '#38BDF8' },
-  sniper:     { label: 'Sniper',     color: '#A78BFA' },
-  whale:      { label: 'Whale',      color: '#FBBF24' },
-  legend:     { label: 'Legend',     color: '#4ADE80' },
+  apprentice: { label: 'Apprentice', color: '#71717A' },
+  trader:     { label: 'Trader',     color: '#60A5FA' },
+  sniper:     { label: 'Sniper',     color: '#C084FC' },
+  whale:      { label: 'Whale',      color: '#FACC15' },
+  legend:     { label: 'Legend',     color: '#1FD978' },
 }
 
 export type Rarity = 'common' | 'rare' | 'epic' | 'legendary' | 'mythic'
 
 export const RARITY_COLORS: Record<Rarity, string> = {
-  common:    '#94A3B8',
-  rare:      '#38BDF8',
-  epic:      '#A78BFA',
-  legendary: '#FBBF24',
-  mythic:    '#4ADE80',
+  common:    '#71717A',
+  rare:      '#60A5FA',
+  epic:      '#C084FC',
+  legendary: '#FACC15',
+  mythic:    '#1FD978',
 }
 
 export interface Signal {

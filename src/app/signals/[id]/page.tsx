@@ -63,7 +63,7 @@ export default function SignalDetailPage() {
   }
 
   const rarityColor = RARITY_COLORS[signal.rarity]
-  const directionColor = signal.direction === 'LONG' ? '#4ADE80' : '#F43F5E'
+  const directionColor = signal.direction === 'LONG' ? '#1FD978' : '#FF6467'
   const tierColor = TIERS[signal.tier].color
   const entryNum = parsePrice(signal.entry)
   const tpNum = parsePrice(signal.tp)
@@ -244,7 +244,7 @@ export default function SignalDetailPage() {
             </div>
             <button
               className="text-[11px] font-bold px-4 py-2 rounded-full border transition-colors hover:border-pumple-primary hover:text-pumple-primary flex-shrink-0"
-              style={{ borderColor: '#1E2235', color: '#64748B' }}
+              style={{ borderColor: '#272A2D', color: '#A1A1AA' }}
             >
               Follow
             </button>
@@ -300,7 +300,7 @@ export default function SignalDetailPage() {
           <div className="flex gap-3 mb-4">
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
-              style={{ backgroundColor: '#A78BFA20', border: '2px solid #A78BFA60', color: '#A78BFA' }}
+              style={{ backgroundColor: '#C084FC20', border: '2px solid #C084FC60', color: '#C084FC' }}
             >
               Y
             </div>
@@ -349,7 +349,7 @@ export default function SignalDetailPage() {
           <div className="flex flex-col gap-2">
             {relatedSignals.map(s => {
               const sRarityColor = RARITY_COLORS[s.rarity]
-              const sDirColor = s.direction === 'LONG' ? '#4ADE80' : '#F43F5E'
+              const sDirColor = s.direction === 'LONG' ? '#1FD978' : '#FF6467'
               return (
                 <Link
                   key={s.id}

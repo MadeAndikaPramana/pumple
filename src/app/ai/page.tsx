@@ -25,9 +25,9 @@ const SUGGESTED_PROMPTS = [
 ]
 
 const RECENT_INSIGHTS = [
-  { color: '#4ADE80', text: 'BTC accumulation pattern detected near $66K', time: '2h ago' },
-  { color: '#F43F5E', text: 'ETH showing weakness on 4H RSI', time: '4h ago' },
-  { color: '#FBBF24', text: 'SOL whale wallet activity spike', time: '6h ago' },
+  { color: '#1FD978', text: 'BTC accumulation pattern detected near $66K', time: '2h ago' },
+  { color: '#FF6467', text: 'ETH showing weakness on 4H RSI', time: '4h ago' },
+  { color: '#FACC15', text: 'SOL whale wallet activity spike', time: '6h ago' },
 ]
 
 export default function AIPage() {
@@ -91,9 +91,9 @@ export default function AIPage() {
                 <div
                   className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5"
                   style={{
-                    backgroundColor: '#4ADE8020',
-                    border: '1px solid #4ADE8040',
-                    boxShadow: '0 0 10px rgba(74,222,128,0.2)',
+                    backgroundColor: '#1FD97820',
+                    border: '1px solid #1FD97840',
+                    boxShadow: '0 0 10px rgba(31, 217, 120,0.2)',
                   }}
                 >
                   <ChartNoAxesCombined size={12} className="text-pumple-primary" />
@@ -101,8 +101,8 @@ export default function AIPage() {
                 <div
                   className="max-w-[80%] rounded-[10px] rounded-tl-[3px] p-2.5 text-xs leading-relaxed text-pumple-text"
                   style={{
-                    backgroundColor: '#181B24',
-                    border: '1px solid #1E2235',
+                    backgroundColor: '#212225',
+                    border: '1px solid #272A2D',
                   }}
                 >
                   <ReactMarkdown
@@ -123,8 +123,8 @@ export default function AIPage() {
                 <div
                   className="max-w-[80%] rounded-[10px] rounded-tr-[3px] p-2.5 text-xs text-pumple-text whitespace-pre-wrap"
                   style={{
-                    backgroundColor: '#4ADE8015',
-                    border: '1px solid #4ADE8030',
+                    backgroundColor: '#1FD97815',
+                    border: '1px solid #1FD97830',
                   }}
                 >
                   {msg.content}
@@ -165,7 +165,7 @@ export default function AIPage() {
               key={prompt}
               onClick={() => setInput(prompt)}
               className="text-[11px] text-pumple-muted hover:text-pumple-primary cursor-pointer py-1.5"
-              style={{ borderBottom: i < SUGGESTED_PROMPTS.length - 1 ? '1px solid #1E2235' : 'none' }}
+              style={{ borderBottom: i < SUGGESTED_PROMPTS.length - 1 ? '1px solid #272A2D' : 'none' }}
             >
               {prompt}
             </div>

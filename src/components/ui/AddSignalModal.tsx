@@ -62,7 +62,7 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
         : ((sl - entry) / entry * 100).toFixed(2))
     : null
 
-  const confidenceColor = confidence >= 80 ? '#4ADE80' : confidence >= 65 ? '#FBBF24' : '#F43F5E'
+  const confidenceColor = confidence >= 80 ? '#1FD978' : confidence >= 65 ? '#FACC15' : '#FF6467'
 
   const toggleType = (t: string) =>
     setSelectedTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
@@ -93,15 +93,15 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
         style={{
           maxWidth: '600px',
           maxHeight: '90vh',
-          backgroundColor: '#111318',
-          border: '1px solid #1E2235',
+          backgroundColor: '#18191B',
+          border: '1px solid #272A2D',
           borderRadius: '16px',
         }}
       >
         {/* Header */}
         <div
           className="flex justify-between items-center p-4"
-          style={{ borderBottom: '1px solid #1E2235' }}
+          style={{ borderBottom: '1px solid #272A2D' }}
         >
           <span className="font-display text-sm font-bold text-pumple-text">Post a signal</span>
           <button
@@ -128,9 +128,9 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
                     className="text-[11px] font-bold px-3 py-1.5 rounded-[6px] transition-colors"
                     style={direction === d
                       ? d === 'LONG'
-                        ? { backgroundColor: '#4ADE8020', color: '#4ADE80', border: '1px solid #4ADE8050' }
-                        : { backgroundColor: '#F43F5E20', color: '#F43F5E', border: '1px solid #F43F5E50' }
-                      : { backgroundColor: '#181B24', color: '#64748B', border: '1px solid #1E2235' }
+                        ? { backgroundColor: '#1FD97820', color: '#1FD978', border: '1px solid #1FD97850' }
+                        : { backgroundColor: '#FF646720', color: '#FF6467', border: '1px solid #FF646750' }
+                      : { backgroundColor: '#212225', color: '#A1A1AA', border: '1px solid #272A2D' }
                     }
                   >
                     {d}
@@ -155,7 +155,7 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
                     key={c}
                     onClick={() => setCoin(c.replace('$', '') + '/USDT')}
                     className="text-[10px] font-semibold px-1.5 py-0.5 rounded-[4px] transition-colors"
-                    style={{ backgroundColor: '#181B24', color: '#64748B', border: '1px solid #1E2235' }}
+                    style={{ backgroundColor: '#212225', color: '#A1A1AA', border: '1px solid #272A2D' }}
                   >
                     {c}
                   </button>
@@ -173,8 +173,8 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
                     onClick={() => setTimeframe(tf)}
                     className="text-[11px] font-bold px-2.5 py-1 rounded-[5px] transition-colors"
                     style={timeframe === tf
-                      ? { backgroundColor: '#4ADE8020', color: '#4ADE80', border: '1px solid #4ADE8040' }
-                      : { backgroundColor: '#181B24', color: '#64748B', border: '1px solid #1E2235' }
+                      ? { backgroundColor: '#1FD97820', color: '#1FD978', border: '1px solid #1FD97840' }
+                      : { backgroundColor: '#212225', color: '#A1A1AA', border: '1px solid #272A2D' }
                     }
                   >
                     {tf}
@@ -188,9 +188,9 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
           <div>
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: 'Entry Price', value: entryPrice, set: setEntryPrice, color: '#F1F5F9' },
-                { label: 'Take Profit', value: takeProfit, set: setTakeProfit, color: '#4ADE80' },
-                { label: 'Stop Loss',   value: stopLoss,   set: setStopLoss,   color: '#F43F5E' },
+                { label: 'Entry Price', value: entryPrice, set: setEntryPrice, color: '#FAFAFA' },
+                { label: 'Take Profit', value: takeProfit, set: setTakeProfit, color: '#1FD978' },
+                { label: 'Stop Loss',   value: stopLoss,   set: setStopLoss,   color: '#FF6467' },
               ].map(({ label, value, set, color }) => (
                 <div key={label}>
                   <p className="text-[11px] text-pumple-muted mb-1">{label}</p>
@@ -241,8 +241,8 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
                   onClick={() => toggleType(t)}
                   className="text-[11px] font-bold px-2.5 py-1 rounded-[5px] transition-colors"
                   style={selectedTypes.includes(t)
-                    ? { backgroundColor: '#4ADE8020', color: '#4ADE80', border: '1px solid #4ADE80' }
-                    : { backgroundColor: '#181B24', color: '#64748B', border: '1px solid #1E2235' }
+                    ? { backgroundColor: '#1FD97820', color: '#1FD978', border: '1px solid #1FD978' }
+                    : { backgroundColor: '#212225', color: '#A1A1AA', border: '1px solid #272A2D' }
                   }
                 >
                   {t}
@@ -325,7 +325,7 @@ export default function AddSignalModal({ isOpen, onClose }: AddSignalModalProps)
         {/* Footer */}
         <div
           className="flex justify-between items-center p-4"
-          style={{ borderTop: '1px solid #1E2235' }}
+          style={{ borderTop: '1px solid #272A2D' }}
         >
           <div className="flex items-center gap-2">
             <TierBadge tier="sniper" size="sm" />

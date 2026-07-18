@@ -22,7 +22,6 @@ export default function SignalsPage() {
   const [filter, setFilter] = useState('All')
 
   const colsClass = COLS_CLASS[cols]
-  const chartHeight = cols >= 3 ? 180 : cols === 2 ? 240 : 320
 
   return (
     <motion.div
@@ -68,7 +67,7 @@ export default function SignalsPage() {
 
       <div className={`grid ${colsClass} gap-3`}>
         {SIGNALS.map(signal => (
-          <SignalCard key={signal.id} signal={signal} chartHeight={chartHeight} />
+          <SignalCard key={signal.id} signal={signal} />
         ))}
       </div>
 
